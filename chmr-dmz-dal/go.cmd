@@ -1,0 +1,2 @@
+docker build -f Dockerfile -t chmr-dmz-dal .
+docker run -d --rm --name chmr-dmz-dal --network dmznet -p 5000:5000 -e REDIS_URL="redis://chmr-dmz-redis:6379" -v filedata:/usr/server/app/files chmr-dmz-dal
