@@ -1,3 +1,3 @@
 # CHMTAC-Charlie
 CHMR DMP Tactical Application for Pre-Production Release Charlie
-![CHMTAC Charlie Architecture](https://github.com/user-attachments/assets/8913b1b5-96d4-4ff3-88b7-6a009600c220)
+![CHMTAC Charlie Architecture](https://github.com/user-attachments/assets/73cc8013-68e1-43b6-9f03-05bba56693da)
