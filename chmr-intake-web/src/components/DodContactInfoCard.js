@@ -17,6 +17,24 @@ const rankMap = {
   ]
 };
 
+const combatantCommands = [
+  { value: "",          label: "Please Select" },
+  { value: "None",      label: "None" },
+  { value: "AFRICOM",   label: "Africa Command" },
+  { value: "CENTCOM",   label: "Central Command" },
+  { value: "CYBERCOM",  label: "Cyber Command" },
+  { value: "EUCOM",     label: "European Command" },
+  { value: "INDOPACOM", label: "Indo-Pacific Command" },
+  { value: "NORTHCOM",  label: "Northern Command" },
+  { value: "NATO",      label: "North Atlantic Treaty Organization" },
+  { value: "SOCOM",     label: "Special Operations Command" },
+  { value: "SOUTHCOM",  label: "Southern Command" },
+  { value: "SPACECOM",  label: "Space Command" },
+  { value: "STRATCOM",  label: "Strategic Command" },
+  { value: "TRANSCOM",  label: "Transportation Command" },
+  { value: "Other",     label: "Other" }
+];
+
 const dutyTypeOptions = Object.keys(rankMap);
 
 
@@ -25,6 +43,7 @@ const DodContactInfoCard = () => {
   const [selectedDutyType, setSelectedDutyType] = useState(""); // Track the selected Duty Type
   const [selectedDutyRank, setSelectedDutyRank] = useState(''); // Track the selected Duty Rank
   const dutyRankRef = useRef(null); // Ref for the Duty Rank field
+  const [selectedCommand, setSelectedCommand] = useState("");
 
   const handleDutyTypeChange = (e) => {
     const selectedType = e.target.value;
@@ -36,6 +55,9 @@ const DodContactInfoCard = () => {
       dutyRankRef.current.disabled = !selectedType; // Disable if no Duty Type is selected
     }
   };
+
+  const showOtherCommand = selectedCommand === "Other";
+
 
   return (
     <Card sx={{ mb: 5 }}>
@@ -133,21 +155,34 @@ const DodContactInfoCard = () => {
               required
             />
           </Grid>
-          <Grid item xs={12} md={6}>
+        <Grid item xs={12} md={6}>
             <TextField
-              label="Combat Command"
+              select
+              label="Combatant Command"
               name="combat_command"
               fullWidth
               required
-            />
+              value={selectedCommand}
+              onChange={(e) => setSelectedCommand(e.target.value)}
+            >
+              {combatantCommands.map((cmd) => (
+                <MenuItem key={cmd.value} value={cmd.value}>
+                  {cmd.label}
+                </MenuItem>
+              ))}
+            </TextField>
           </Grid>
-          <Grid item xs={12} md={6}>
-            <TextField
-              label="Other Command"
-              name="other_command"
-              fullWidth
-            />
-          </Grid>
+
+          {showOtherCommand && (
+            <Grid item xs={12} md={6}>
+              <TextField
+                label="Other Command"
+                name="other_command"
+                fullWidth
+                required
+              />
+            </Grid>
+          )}
         </Grid>
       </CardContent>
     </Card>

@@ -19,6 +19,7 @@ import {
   TextField
 } from "@mui/material";
 import axios from "axios";
+import Header from '../components/Header.js';
 
 export default function ReportManagementPage() {
   
@@ -154,17 +155,7 @@ export default function ReportManagementPage() {
 
   return (
     <Box sx={{ backgroundColor: "#f5f5f5", minHeight: "100vh" }}>
-      {/* header */}
-      <AppBar position="static" sx={{ background: "linear-gradient(45deg,#3f51b5,#1d2d50)", py: 1.5 }}>
-        <Toolbar sx={{ flexDirection: "column", textAlign: "center" }}>
-          <Typography variant="h4" sx={{ fontWeight: "bold", letterSpacing: 1, textTransform: "uppercase", color: "#fff", textShadow: "3px 3px 6px rgba(0,0,0,.3)" }}>
-            Report Management
-          </Typography>
-          <Typography variant="h6" sx={{ color: "#e0e0e0", mt: .5, fontWeight: "bold", fontSize: "1.1rem" }}>
-            Manage your submitted reports below:
-          </Typography>
-        </Toolbar>
-      </AppBar>
+      <Header headerText="Manage your submitted reports below:" />
 
       <Container maxWidth={false} sx={{ pt: 5 }}>
         {error && <Box sx={{ color: "red", mb: 2 }}><strong>Error:</strong> {error}</Box>}

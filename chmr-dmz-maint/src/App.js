@@ -1,15 +1,13 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import ReportForm from './pages/ReportForm.js';
-import SubmissionPage from './pages/SubmissionPage.js';
+import ReportManagementPage from './pages/ReportManagmentPage.js';
 import 'bootstrap/dist/css/bootstrap.min.css'; // Import Bootstrap
 
 const App = () => {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<ReportForm />} />
-        <Route path="/SubmissionPage" element={<SubmissionPage />} />
+        <Route path="/" element={<ReportManagementPage />} />
       </Routes>
     </Router>
   );

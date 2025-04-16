@@ -1,8 +1,10 @@
 import React from "react";
-import { AppBar, Grid2, Toolbar, Typography, Box, Container } from "@mui/material";
+import { Grid2, Box, Container } from "@mui/material";
 import IntakeFormComponent from "../components/IntakeFormComponent.js";
 import { submitReport } from "../services/api.js";
 import { useNavigate } from "react-router-dom";
+import Header from '../components/Header.js';
+import MenuBar from '../components/MenuBar.js';
 import { v4 as uuidv4 } from 'uuid';
 
 const ReportForm = () => {
@@ -37,38 +39,11 @@ const ReportForm = () => {
 
   return (
     <Box sx={{ backgroundColor: "#f5f5f5", minHeight: "100vh" }}>
-
-      {/* Big Header */}
-      <AppBar position="static" sx={{ background: "linear-gradient(45deg, #3f51b5, #1d2d50)", py: 1.5 }}>
-        <Toolbar sx={{ flexDirection: "column", textAlign: "center" }}>
-          <Typography 
-            variant="h4" 
-            sx={{
-              fontWeight: "bold",
-              letterSpacing: 1,
-              textTransform: "uppercase",
-              color: "#fff",
-              textShadow: "3px 3px 6px rgba(0, 0, 0, 0.3)"
-            }}
-          >
-            Civilian Harm Mitigation
-          </Typography>
-          <Typography 
-            variant="h6" 
-            sx={{ 
-              color: "#e0e0e0", 
-              mt: 0.5, 
-              fontWeight: "bold",
-              fontSize: "1.1rem"
-            }}
-          >
-            Report Suspected Civilian Harm Below:
-          </Typography>
-        </Toolbar>
-      </AppBar>
+      <Header headerText="Report Suspected Civilian Harm Below:" />
+      <MenuBar />
 
       {/* Form Container */}
-      <Container sx={{ pt: 5 }}>
+      <Container sx={{ pt: 1 }}>
         <Grid2 container justifyContent="center">
           <Grid2 item xs={12} sm={10} md={8} lg={6}>
             <IntakeFormComponent onSubmit={handleFormSubmit} />

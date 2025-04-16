@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  chmr-intake-web:
+    build:
+      context: ./chmr-intake-web
+    ports:
+      - "3000:3000"
+    networks:
+      - chmrdmznet
+
+  chmr-dmz-maint:
+    build:
+      context: ./chmr-dmz-maint
+    ports:
+      - "3001:3000"
+    networks:
+      - chmrdmznet
+
+  chmr-dmz-redis:
+    image: redis:7
+    container_name: chmr-dmz-redis
+    ports:
+      - "6379:6379"
+    networks:
+      - chmrdmznet
+
+  chmr-dmz-dal:
+    build:
+      context: ./chmr-dmz-dal
+    ports:
+      - "5000:5000"
+    networks:
+      - chmrdmznet
+    env_file:
+      - ./chmr-dmz-dal/.env
+
+networks:
+  chmrdmznet:
+    driver: bridge

@@ -24,8 +24,7 @@ initializeCSRF();
 export const submitReport = async (data) => {
   try {
     const contactType = process.env.REACT_APP_CONTACT_TYPE || 'DOD';
-    const endpoint = `/report?type=${encodeURIComponent(contactType)}`;
-
+    const endpoint = contactType === 'CIVILIAN' ? '/report/civilian' : '/report/dod';
 
     let formData;
 
