@@ -1,2 +1,2 @@
-docker build -f Dockerfile -t chmr-intake-web .
-docker run -d --name chmr-intake-web --network dmznet -p 3000:3000 chmr-intake-web
+docker build -f Dockerfile -t my-frontend .
+docker run -d --name my-frontend --network mynet -p 3001:3001 my-frontend
