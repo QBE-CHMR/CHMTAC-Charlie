@@ -26,7 +26,8 @@ CHMTAC is built to streamline the process of reporting, managing, and analyzing 
 ---
 
 ## **Architecture**
-![CHMTAC Charlie Architecture](https://github.com/user-attachments/assets/ada952d6-49c0-4a4c-b967-335f2dcfbcf0)
+![image](https://github.com/user-attachments/assets/6f655d96-f03f-4865-ba3b-a2d41c46e60a)
+
 
 The project is composed of the following services:
 1. **Frontend (`chmr-intake-web`)**:
