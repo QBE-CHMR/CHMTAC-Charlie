@@ -1,6 +1,6 @@
-# CHMTAC (Civilian Harm Mitigation Tactical) Preproduction Release Charlie
+# CHMTAC (Civilian Harm Mitigation Tactical) Charlie
 
-CHMTAC is a multi-service application designed to manage reports, analyze data, and provide tools for mitigating civilian harm. This project consists of several microservices, including frontend applications, backend services, and supporting infrastructure.
+CHMTAC is a containerized, multi-service application designed to intake reports of civilian harm, manage them, analyze data, and provide tools for mitigating civilian harm. This project consists of several microservices, including frontend applications, backend services, and supporting infrastructure.
 
 ---
 
@@ -41,7 +41,7 @@ The project is composed of the following services:
    - A Node.js/Express service for handling API requests and interacting with the database.
    - Runs on port `5000`.
 
-4. **Redis**:
+4. **Redis (`chmr-dmz-redis`)**:
    - Used for caching and session management.
    - Runs on port `6379`.
 
@@ -61,7 +61,7 @@ The project is composed of the following services:
 - Purpose: Processes API requests, stores data, and handles business logic.
 - Includes security libraries.
 
-### **Redis**
+### **Redis (`chmr-dmz-redis`)**
 - Purpose: Currently holds list of submitted reports.
 
 ---
