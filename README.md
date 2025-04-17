@@ -17,11 +17,12 @@ CHMTAC is a containerized, multi-service application designed to intake reports 
 ---
 
 ## **Overview**
-CHMTAC is built to streamline the process of reporting, managing, and analyzing civilian harm incidents. It includes:
+CHMTAC is built to scale the reporting, management, and analysis of civilian harm incidents. It includes:
 - A frontend for submitting and managing reports.
 - A backend for processing and storing data.
-- Redis for caching and session management.
-- Docker Compose for local development.
+   - Redis for temporary data isolation and staging.
+   - Postgres for permanent data storage and lifecycle management.
+- Docker Compose for deployment and local development.
 
 ---
 
@@ -31,14 +32,20 @@ CHMTAC is built to streamline the process of reporting, managing, and analyzing 
 
 The project is composed of the following services:
 1. **Frontend (`chmr-intake-web`)**:
-   - A React-based application for submitting reports.
-   - Runs on port `3000`.
+   - DoD or Public web form for submitting a report of civilian harm.
+   - Spam-bot counter measures.
+   - JSON form data validation (valid JSON).
+   - Sends JSON form data and uploaded files to the DAL (chmr-dmz-dal).
 
-2. **Report Manager (`chmr-dmz-maint`)**:
+2. **Report Maintenance (`chmr-dmz-maint`)**:
    - A React-based application for managing reports.
-   - Runs on port `3001`.
+   - Web form to manually determine disposition of reports.
+   - Performs maintenance:
+      - Send reports marked to discard to archive.
+      - Send reports not promotable to another system with interest.
+   - Communicates with chmr-dmz-dal.
 
-3. **Backend (`chmr-dmz-dal`)**:
+3. **Data access layer (`chmr-dmz-dal`)**:
    - A Node.js/Express service for handling API requests and interacting with the database.
    - Runs on port `5000`.
 
