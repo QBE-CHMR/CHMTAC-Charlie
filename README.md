@@ -30,7 +30,8 @@ CHMTAC is built to scale the reporting, management, and analysis of civilian har
 ![image](https://github.com/user-attachments/assets/6f655d96-f03f-4865-ba3b-a2d41c46e60a)
 
 
-The project is composed of the following services:
+The architecture is partitioned into individual containers:
+
 1. **Frontend (`chmr-intake-web`)**:
    - DoD or Public web form for submitting a report of civilian harm.
    - Spam-bot counter measures.
