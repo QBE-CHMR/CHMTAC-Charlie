@@ -1,40 +1,45 @@
 version: '3.8'
 
+networks:
+  dmznet:
+    driver: bridge
+
 services:
-  chmr-intake-web:
+  intake-web:
     build:
       context: ./chmr-intake-web
+    env_file:
+      - .env
+    environment:
+      DAL_HOST: http://chmr-dmz-dal:5000
     ports:
-      - "3000:3000"
+      - "${PORT_INTAKE}:3000" # Expose intake-web to the host
     networks:
-      - chmrdmznet
+      - dmznet
 
-  chmr-dmz-maint:
+  maint:
     build:
       context: ./chmr-dmz-maint
+    env_file:
+      - .env
+    environment:
+      DAL_HOST: http://chmr-dmz-dal:5000
     ports:
-      - "3001:3000"
+      - "${PORT_MAINT}:3000" # Expose maint to the host
     networks:
-      - chmrdmznet
+      - dmznet
 
   chmr-dmz-redis:
     image: redis:7
-    container_name: chmr-dmz-redis
-    ports:
-      - "6379:6379"
     networks:
-      - chmrdmznet
+      - dmznet
 
   chmr-dmz-dal:
     build:
       context: ./chmr-dmz-dal
-    ports:
-      - "5000:5000"
-    networks:
-      - chmrdmznet
     env_file:
-      - ./chmr-dmz-dal/.env
-
-networks:
-  chmrdmznet:
-    driver: bridge
+      - .env
+    environment:
+      REDIS_HOST: redis://chmr-dmz-redis:6379
+    networks:
+      - dmznet
