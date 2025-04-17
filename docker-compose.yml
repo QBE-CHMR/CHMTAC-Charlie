@@ -5,6 +5,20 @@ networks:
     driver: bridge
 
 services:
+  chmr-dmz-dal:
+    build:
+      context: ./chmr-dmz-dal
+    env_file:
+      - .env
+    environment:
+      REDIS_HOST: redis://chmr-dmz-redis:6379
+    networks:
+      - dmznet
+    depends_on:
+      - chmr-dmz-redis # Ensure Redis starts before DAL
+    ports:
+      - "5000:5000" # Expose chmr-dmz-dal to the host
+
   intake-web:
     build:
       context: ./chmr-intake-web
@@ -16,6 +30,8 @@ services:
       - "${PORT_INTAKE}:3000" # Expose intake-web to the host
     networks:
       - dmznet
+    depends_on:
+      - chmr-dmz-dal # Ensure DAL starts before intake-web
 
   maint:
     build:
@@ -28,18 +44,10 @@ services:
       - "${PORT_MAINT}:3000" # Expose maint to the host
     networks:
       - dmznet
+    depends_on:
+      - chmr-dmz-dal # Ensure DAL starts before maint
 
   chmr-dmz-redis:
     image: redis:7
-    networks:
-      - dmznet
-
-  chmr-dmz-dal:
-    build:
-      context: ./chmr-dmz-dal
-    env_file:
-      - .env
-    environment:
-      REDIS_HOST: redis://chmr-dmz-redis:6379
     networks:
       - dmznet

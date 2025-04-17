@@ -2,7 +2,6 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
-import csrf from 'csurf';
 import ReportRouter from './routes/Report.js';
 import managementRouter from './routes/ReportManagement.js';
 import './redisClient.js';
@@ -18,17 +17,8 @@ app.use(cors({
 app.use(bodyParser.json());
 app.use(cookieParser());
 
-// CSRF protection middleware
-const csrfProtection = csrf({ cookie: true });
-
-// Route to send CSRF token to the frontend
-app.get('/csrf-token', csrfProtection, (req, res) => {
-  res.json({ csrfToken: req.csrfToken() });
-});
-
-
-app.use("/report", csrfProtection, ReportRouter);
-app.use('/report/management', csrfProtection, managementRouter);
+app.use("/report", ReportRouter);
+app.use('/report/management', managementRouter);
 
 const PORT = process.env.Port || 5000;
 
