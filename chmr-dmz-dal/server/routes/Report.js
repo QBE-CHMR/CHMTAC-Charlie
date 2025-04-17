@@ -27,11 +27,12 @@ const storage = multer.diskStorage({
   },
 });
 
-const upload = multer({ storage });
+const upload = multer({
+  storage,
+  limits: { fileSize: 5 * 1024 * 1024 * 1024 }, // Limit file size to 5GB
+});
 
-
-
- function captureInfo(req,res,next){
+function captureInfo(req,res,next){
 
     const ipaddress = req.ip;
     const devicetype = "";
@@ -96,14 +97,24 @@ async function submitReport(req,res){
 ReportRouter.post(
     '/',
     rateLimiter, // Apply rate limiting
-    upload.array('files', 10), // Handle file uploads
     pickValidator, // Validate required fields
     validateReport, // Validate report structure
     useragentfilter, // Filter based on user-agent
     captureInfo, // Log request details
+    upload.array('files', 10), // Handle file uploads
     submitReport // Handle the core business logic
   );
-  
-  export default ReportRouter;
+
+ReportRouter.use((err, req, res, next) => {
+  if (err instanceof multer.MulterError) {
+    return res.status(400).json({ error: err.message });
+  }
+  if (err) {
+    return res.status(500).json({ error: 'Server Error' });
+  }
+  next();
+});
+
+export default ReportRouter;
 
     

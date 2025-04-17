@@ -15,6 +15,7 @@ import {
 import CaptchaComponent from "./CaptchaComponent.js";
 import DodContactInfoCard from "./DodContactInfoCard.js";
 import CivilianContactInfoCard from "./CivilianContactInfoCard.js";
+import FileUploadComponent from "./FileUploadComponent.js";
 import moment from "moment-timezone";
 
 // Choose between DOD or CIVILIAN form
@@ -63,6 +64,12 @@ const IntakeFormComponent = ({ onSubmit }) => {
     setError("");
     setCaptchaVerified(false);
   };
+
+  const logFilesUploaded = (uploadedFiles) => {
+    console.log("Files uploaded:", uploadedFiles);
+    // Handle uploaded files (e.g., include them in the form submission)
+  };
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -228,12 +235,7 @@ const IntakeFormComponent = ({ onSubmit }) => {
           <Grid spacing={3} direction="column" >
             <Grid item xs={12}>
               <label>Upload External Information Sources</label>
-              <Input
-                type="file"
-                name="files"
-                inputProps={{ multiple: true }}
-                fullWidth
-              />
+              <FileUploadComponent onFilesUploaded={logFilesUploaded} />
             </Grid>
             <Grid item xs={12}>
               <TextField
