@@ -4,6 +4,11 @@ import { STATUS_ENUM } from '../constants/statusEnum.js';
 
 const managementRouter = express.Router();
 
+    if (await redisClient.exists(k)) return k;
+  }
+  return null;
+}
+
 // Get reports by status, if no status is provided, return all reports
 // Example: GET /report/management?status=initialized
 managementRouter.get('/', async (req, res) => {
@@ -59,8 +64,8 @@ managementRouter.get('/', async (req, res) => {
 // Get a single report by ID
 managementRouter.get('/:id', async (req, res) => {
     try {
-      const { id } = req.params;
-      const key = `Report:${id}`;
+      const key = await keyFor(req.params.id);
+      if(!key) return res.status(404).json({error: "Report not ound"});
       const report = await redisClient.get(key);
       if (!report) {
         return res.status(404).json({ error: 'Report not found' });
@@ -75,13 +80,11 @@ managementRouter.get('/:id', async (req, res) => {
 // Update a report by ID
 managementRouter.put('/:id', async (req, res) => {
   try {
-    const { id } = req.params;
-    const key = `Report:${id}`;
-    const report = await redisClient.get(key);
-    if (!report) {
-      return res.status(404).json({ error: 'Report not found' });
-    }
-    const updatedData = { ...JSON.parse(report), ...req.body };
+    const key = await keyFor(req.params.id);
+    if (!key) return res.status(404).json({ error: "Report not found" });
+    
+    const current = JSON.parse(await redisClient.get(key));
+    const updatedData = { ...current, ...req.body };
     await redisClient.set(key, JSON.stringify(updatedData));
     res.status(200).json({ message: 'Report updated successfully', report: updatedData });
   } catch (error) {
@@ -93,12 +96,8 @@ managementRouter.put('/:id', async (req, res) => {
 // Delete a report by ID
 managementRouter.delete('/:id', async (req, res) => {
   try {
-    const { id } = req.params;
-    const key = `Report:${id}`;
-    const exists = await redisClient.exists(key);
-    if (!exists) {
-      return res.status(404).json({ error: 'Report not found' });
-    }
+    const key = await keyFor(req.params.id);
+    if (!key) return res.status(404).json({ error: "Report not found" });
     await redisClient.del(key);
     res.status(200).json({ message: 'Report deleted successfully' });
   } catch (error) {
