@@ -4,6 +4,9 @@ import { STATUS_ENUM } from '../constants/statusEnum.js';
 
 const managementRouter = express.Router();
 
+async function keyFor(id) {
+  for (const p of ["Report", "DoD Report", "Civilian Report"]) {
+    const k = `${p}:${id}`;
     if (await redisClient.exists(k)) return k;
   }
   return null;
