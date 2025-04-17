@@ -55,25 +55,6 @@ The project is composed of the following services:
 
 ---
 
-## **Services**
-### **Frontend (`chmr-intake-web`)**
-- Location: `./chmr-intake-web`
-- Purpose: Allows users to submit reports of suspected civilian harm.
-
-### **Report Manager (`chmr-dmz-maint`)**
-- Location: `./chmr-dmz-maint`
-- Purpose: Provides tools for managing and reviewing submitted reports.
-
-### **Backend (`chmr-dmz-dal`)**
-- Location: `./chmr-dmz-dal`
-- Purpose: Processes API requests, stores data, and handles business logic.
-- Includes security libraries.
-
-### **Redis (`chmr-dmz-redis`)**
-- Purpose: Currently holds list of submitted reports.
-
----
-
 ## **Setup and Installation**
 
 ### **Prerequisites**
