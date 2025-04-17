@@ -17,7 +17,9 @@ CHMTAC is a containerized, multi-service application designed to intake reports 
 ---
 
 ## **Overview**
-CHMTAC is built to scale the reporting, management, and analysis of civilian harm incidents. It includes:
+CHMTAC is the tactical version of the CHMR DMP. It is built to scale the reporting, management, and analysis of civilian harm incidents. This repo is for preproduction release Charlie only, which is not the full DMP.
+
+It includes:
 - A frontend for submitting and managing reports.
 - A backend for processing and storing data.
    - Redis for temporary data isolation and staging.
@@ -65,28 +67,27 @@ The architecture is partitioned into individual containers:
 ### **Steps**
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-org/CHMTAC.git
-   cd CHMTAC
+   git clone https://github.com/QBE-CHMR/CHMTAC-Charlie.git
+   cd CHMTAC-Charlie
 
 2. Start all services using Docker Compose:
    ```bash
    docker-compose up --build -d
 
 3. Access the services:
-   - **Frontend**: [http://localhost:3000](http://localhost:3000)
-   - **Report Manager**: [http://localhost:3001](http://localhost:3001)
-   - **Backend**: [http://localhost:5000](http://localhost:5000)
+   - **Web page to report civilian harm**: [http://localhost:${DMZ_INTAKE_PORT}](http://localhost:${DMZ_INTAKE_PORT})
+   - **Report Maintenance**: [http://localhost:${DMZ_MAINT_PORT}](http://localhost:${DMZ_MAINT_PORT})
 
 ---
 
 ## **Usage**
 
 ### **Submitting a Report**
-1. Navigate to the frontend (`chmr-intake-web`) at [http://localhost:3000](http://localhost:3000).
+1. Navigate to the frontend (`chmr-intake-web`) at [http://localhost:${DMZ_INTAKE_PORT}](http://localhost:${DMZ_INTAKE_PORT}).
 2. Fill out the report form and submit it.
 
 ### **Managing Reports**
-1. Navigate to the report manager (`chmr-dmz-maint`) at [http://localhost:3001](http://localhost:3001).
+1. Navigate to the report manager (`chmr-dmz-maint`) at [http://localhost:${DMZ_MAINT_PORT}](http://localhost:${DMZ_MAINT_PORT}).
 2. Use the filters and sorting options to manage reports.
 
 ---
@@ -102,7 +103,7 @@ The following environment variables are used in the project:
 - `REACT_APP_API_BASE_URL`: Base URL for the backend API.
 
 ### **Backend (`chmr-dmz-dal`)**
-- `REDIS_URL`: URL for the Redis instance (e.g., `redis://my-redis:6379`).
+- `REDIS_URL`: URL for the Redis instance (e.g., `redis://chmr-dmz-redis:6379`).
 - `NODE_ENV`: Set to `production` or `development`.
 
 
