@@ -1,4 +1,4 @@
-# CHMTAC (Civilian Harm Mitigation Tactical) Charlie
+# CHMTAC (Civilian Harm DMP Tactical) Charlie
 
 CHMTAC is a containerized, multi-service application designed to intake reports of civilian harm, manage them, analyze data, and provide tools for mitigating civilian harm. This project consists of several microservices, including frontend applications, backend services, and supporting infrastructure.
 
@@ -17,11 +17,14 @@ CHMTAC is a containerized, multi-service application designed to intake reports 
 ---
 
 ## **Overview**
-CHMTAC is built to streamline the process of reporting, managing, and analyzing civilian harm incidents. It includes:
+CHMTAC is the tactical version of the CHMR DMP. It is built to scale the reporting, management, and analysis of civilian harm incidents. This repo is for preproduction release Charlie only, which is not the full DMP.
+
+It includes:
 - A frontend for submitting and managing reports.
 - A backend for processing and storing data.
-- Redis for caching and session management.
-- Docker Compose for local development.
+   - Redis for temporary data isolation and staging.
+   - Postgres for permanent data storage and lifecycle management.
+- Docker Compose for deployment and local development.
 
 ---
 
@@ -29,41 +32,29 @@ CHMTAC is built to streamline the process of reporting, managing, and analyzing 
 ![image](https://github.com/user-attachments/assets/6f655d96-f03f-4865-ba3b-a2d41c46e60a)
 
 
-The project is composed of the following services:
+The architecture is partitioned into individual containers:
+
 1. **Frontend (`chmr-intake-web`)**:
-   - A React-based application for submitting reports.
-   - Runs on port `3000`.
+   - DoD or Public web form for submitting a report of civilian harm.
+   - Spam-bot counter measures.
+   - JSON form data validation (valid JSON).
+   - Sends JSON form data and uploaded files to the DAL (chmr-dmz-dal).
 
-2. **Report Manager (`chmr-dmz-maint`)**:
+2. **Report Maintenance (`chmr-dmz-maint`)**:
    - A React-based application for managing reports.
-   - Runs on port `3001`.
+   - Web form to manually determine disposition of reports.
+   - Performs maintenance:
+      - Send reports marked to discard to archive.
+      - Send reports not promotable to another system with interest.
+   - Communicates with chmr-dmz-dal.
 
-3. **Backend (`chmr-dmz-dal`)**:
+3. **Data access layer (`chmr-dmz-dal`)**:
    - A Node.js/Express service for handling API requests and interacting with the database.
    - Runs on port `5000`.
 
 4. **Redis (`chmr-dmz-redis`)**:
    - Used for caching and session management.
    - Runs on port `6379`.
-
----
-
-## **Services**
-### **Frontend (`chmr-intake-web`)**
-- Location: `./chmr-intake-web`
-- Purpose: Allows users to submit reports of suspected civilian harm.
-
-### **Report Manager (`chmr-dmz-maint`)**
-- Location: `./chmr-dmz-maint`
-- Purpose: Provides tools for managing and reviewing submitted reports.
-
-### **Backend (`chmr-dmz-dal`)**
-- Location: `./chmr-dmz-dal`
-- Purpose: Processes API requests, stores data, and handles business logic.
-- Includes security libraries.
-
-### **Redis (`chmr-dmz-redis`)**
-- Purpose: Currently holds list of submitted reports.
 
 ---
 
@@ -76,28 +67,27 @@ The project is composed of the following services:
 ### **Steps**
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-org/CHMTAC.git
-   cd CHMTAC
+   git clone https://github.com/QBE-CHMR/CHMTAC-Charlie.git
+   cd CHMTAC-Charlie
 
 2. Start all services using Docker Compose:
    ```bash
    docker-compose up --build -d
 
 3. Access the services:
-   - **Frontend**: [http://localhost:3000](http://localhost:3000)
-   - **Report Manager**: [http://localhost:3001](http://localhost:3001)
-   - **Backend**: [http://localhost:5000](http://localhost:5000)
+   - **Web page to report civilian harm**: [http://localhost:${DMZ_INTAKE_PORT}](http://localhost:${DMZ_INTAKE_PORT})
+   - **Report Maintenance**: [http://localhost:${DMZ_MAINT_PORT}](http://localhost:${DMZ_MAINT_PORT})
 
 ---
 
 ## **Usage**
 
 ### **Submitting a Report**
-1. Navigate to the frontend (`chmr-intake-web`) at [http://localhost:3000](http://localhost:3000).
+1. Navigate to the frontend (`chmr-intake-web`) at [http://localhost:${DMZ_INTAKE_PORT}](http://localhost:${DMZ_INTAKE_PORT}).
 2. Fill out the report form and submit it.
 
 ### **Managing Reports**
-1. Navigate to the report manager (`chmr-dmz-maint`) at [http://localhost:3001](http://localhost:3001).
+1. Navigate to the report manager (`chmr-dmz-maint`) at [http://localhost:${DMZ_MAINT_PORT}](http://localhost:${DMZ_MAINT_PORT}).
 2. Use the filters and sorting options to manage reports.
 
 ---
@@ -113,7 +103,7 @@ The following environment variables are used in the project:
 - `REACT_APP_API_BASE_URL`: Base URL for the backend API.
 
 ### **Backend (`chmr-dmz-dal`)**
-- `REDIS_URL`: URL for the Redis instance (e.g., `redis://my-redis:6379`).
+- `REDIS_URL`: URL for the Redis instance (e.g., `redis://chmr-dmz-redis:6379`).
 - `NODE_ENV`: Set to `production` or `development`.
 
 
