@@ -7,7 +7,7 @@ const api = axios.create({
 
 export const submitReport = async (data) => {
   try {
-    const contactType = process.env.REACT_APP_CONTACT_TYPE || 'DOD';
+    const contactType = process.env.CONTACT_TYPE || 'DOD';
     const endpoint = contactType === 'CIVILIAN' ? '/report/civilian' : '/report/dod';
 
     let formData;

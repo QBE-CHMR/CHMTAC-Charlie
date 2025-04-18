@@ -101,7 +101,7 @@ ReportRouter.post(
     validateReport, // Validate report structure
     useragentfilter, // Filter based on user-agent
     captureInfo, // Log request details
-    upload.array('files', 10), // Handle file uploads
+    upload.array('files', 5), // Handle file uploads
     submitReport // Handle the core business logic
   );
 
