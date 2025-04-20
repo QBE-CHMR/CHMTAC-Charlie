@@ -19,7 +19,7 @@ import FileUploadComponent from "./FileUploadComponent.js";
 import moment from "moment-timezone";
 
 // Choose between DOD or CIVILIAN form
-const CONTACT_TYPE = process.env.CONTACT_TYPE || "DOD"; // Default to "DOD"
+const REACT_APP_CONTACT_TYPE = process.env.REACT_APP_CONTACT_TYPE || "DOD"; // Default to "DOD"
 
 const IntakeFormComponent = ({ onSubmit }) => {
   const formRef = useRef(null); // Create a ref for the form element
@@ -125,7 +125,7 @@ const IntakeFormComponent = ({ onSubmit }) => {
     <form onSubmit={handleSubmit} ref={formRef} sx={{ maxWidth: '1200px', width: '100%', margin: '0 auto' }}>
 
       {/* Displays Contacts Card based on .env file*/}
-      {CONTACT_TYPE === "DOD" ? (
+      {REACT_APP_CONTACT_TYPE === "DOD" ? (
         <DodContactInfoCard />
       ) : (
         <CivilianContactInfoCard />

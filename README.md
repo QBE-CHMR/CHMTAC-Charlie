@@ -96,7 +96,7 @@ The architecture is partitioned into individual containers:
 The following environment variables are used in the project:
 
 ### **Frontend (`chmr-intake-web`)**
-- `REACT_APP_CONTACT_TYPE`: Choose which form contact info to include (DOD or CIVILIAN).
+- `REACT_APP_REACT_APP_CONTACT_TYPE`: Choose which form contact info to include (DOD or CIVILIAN).
 - `REACT_APP_API_BASE_URL`: Base URL for the backend API.
 
 ### **Report Manager (`chmr-dmz-maint`)**

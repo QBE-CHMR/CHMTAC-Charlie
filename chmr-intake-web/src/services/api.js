@@ -1,15 +1,18 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: process.env.DAL_HOST,
+  baseURL: process.env.REACT_APP_DAL_HOST,
   timeout: 10000,
 });
 
 export const submitReport = async (data) => {
   try {
-    const contactType = process.env.CONTACT_TYPE || 'DOD';
+    const contactType = process.env.REACT_APP_CONTACT_TYPE || 'DOD';
     const endpoint = `/report?type=${encodeURIComponent(contactType)}`;
 
+    // Debugging: Log the baseURL being used
+    console.log('API baseURL:', process.env.REACT_APP_DAL_HOST);
+    console.log('Environment Variables:', process.env);
 
     let formData;
 
@@ -28,7 +31,7 @@ export const submitReport = async (data) => {
     const response = await api.post(endpoint, formData);
     return response.data;
   } catch (error) {
-    console.error('Error submitting the report:', error);
+    console.error('Error submitting the report:', error.response?.data || error.message);
     throw error;
   }
 };

@@ -50,21 +50,35 @@ function captureInfo(req,res,next){
 
 function pickValidator(req, res, next) {
   const t = (req.query.type || "").toUpperCase();
-  if (t === "DOD")      return DodValidateRequiredFields(req, res, next);
-  if (t === "CIVILIAN") return CivValidateRequiredFields(req, res, next);
-  return res.status(400).json({ error: "must be DOD or CIVILIAN" });
+  
+  if (t === "DOD") {
+    return DodValidateRequiredFields(req, res, next);
+  }
+  if (t === "CIVILIAN") {
+    return CivValidateRequiredFields(req, res, next);
+  }
+
+  // Catch all invalid or missing type cases
+  console.error("Invalid or missing type. Must be 'DOD' or 'CIVILIAN'", {
+    query: req.query,
+    body: req.body,
+    files: req.files,
+  });
+  return res.status(400).json({
+    error: "Invalid or missing type. Must be 'DOD' or 'CIVILIAN'",
+    debug: { query: req.query, body: req.body, files: req.files },
+  });
 }
 
 async function submitReport(req,res){
+  try{
+    const type = req.query.type.toUpperCase();
+    const reportID = uuidv4();
 
-    try{
-        const type = req.query.type.toUpperCase();
-        const reportID = uuidv4();
-
-        let filereferences = [];
-        if (req.files && req.files.length > 0) {
-            filereferences = req.files.map((file) => file.filename);
-   }
+    let filereferences = [];
+    if (req.files && req.files.length > 0) {
+        filereferences = req.files.map((file) => file.filename);
+    }
 
    const reportData = {
     id: reportID,
@@ -74,24 +88,23 @@ async function submitReport(req,res){
     status: STATUS_ENUM.Submitted,
     filereferences,
     submittedAt: new Date().toISOString(),
-    confidence_level: parseInt(process.env.CONFIDENCE_LEVEL, 10) || 1, // Default to civilian if not set
-  };
-  // Log the data before storing it in Redis
-  console.log(`Storing ${type} Report Data:`, reportData);
+    confidence_level: parseInt(process.env.REACT_APP_CONFIDENCE_LEVEL, 10) || 1, // Default to civilian if not set
+    };
+    // Log the data before storing it in Redis
+    console.log(`Storing ${type} Report Data:`, reportData);
 
-  // Store data in Redis
-  const keyPrefix = type === "DOD" ? "DoD Report:" : "Civilian Report:";
-  await redisClient.set(`${keyPrefix}${reportID}`, JSON.stringify(reportData));
-  
+    // Store data in Redis
+    const keyPrefix = type === "DOD" ? "DoD Report:" : "Civilian Report:";
+    await redisClient.set(`${keyPrefix}${reportID}`, JSON.stringify(reportData));
 
-  return res.status(200).json({
-    message: 'Report Submitted!',
-    reportID,
-  });
- } catch (err) {
-   console.error('Error', err);
-   return res.status(500).json({ error: 'Server Error' });
- }
+    return res.status(200).json({
+      message: 'Report Submitted!',
+      reportID,
+    });
+  } catch (err) {
+    console.error('Error', err);
+    return res.status(500).json({ error: 'Server Error' });
+  }
 }
 
 ReportRouter.post(
