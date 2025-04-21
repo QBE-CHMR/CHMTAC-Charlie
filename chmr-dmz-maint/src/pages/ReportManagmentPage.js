@@ -230,14 +230,42 @@ export default function ReportManagementPage() {
           </Grid>
         )}
 
-        {selectedReport && (
-          <Box sx={{ backgroundColor:"#fff", p:2, mt:2, boxShadow:1, borderRadius:1 }}>
-            <Typography variant="h5" sx={{ mb:2 }}>Report Details</Typography>
-            <Typography><strong>ID:</strong> {selectedReport.id}</Typography>
-            <Typography><strong>Status:</strong> {STATUS_MAP[selectedReport.status] ?? selectedReport.status}</Typography>
-            <Typography><strong>Submitted At:</strong> {selectedReport.submittedAt}</Typography>
-          </Box>
-        )}
+      {selectedReport && (
+        <Box sx={{ backgroundColor:"#fff", p:2, mt:2, boxShadow:1, borderRadius:1 }}>
+        <Typography variant="h5" sx={{ mb:2 }}>Report Details</Typography>
+
+        
+        <Typography><strong>ID:</strong>            {selectedReport.id}</Typography>
+        <Typography><strong>Status:</strong>        {STATUS_MAP[selectedReport.status] ?? selectedReport.status}</Typography>
+        <Typography><strong>Submitted At:</strong>  {selectedReport.submittedAt}</Typography>
+
+      
+      {selectedReport.full_name        && <Typography><strong>Full&nbsp;Name:</strong>        {selectedReport.full_name}</Typography>}
+      {selectedReport.phone_number     && <Typography><strong>Phone (Comm):</strong>          {selectedReport.phone_number}</Typography>}
+      {selectedReport.email_address    && <Typography><strong>Email:</strong>                {selectedReport.email_address}</Typography>}
+      {selectedReport.location         && <Typography><strong>Location:</strong>             {selectedReport.location}</Typography>}
+      {selectedReport.start_datetime   && <Typography><strong>Start Date/Time:</strong>      {selectedReport.start_datetime}</Typography>}
+      {selectedReport.end_datetime     && <Typography><strong>End Date/Time:</strong>        {selectedReport.end_datetime}</Typography>}
+      {selectedReport.time_zone        && <Typography><strong>Time&nbsp;Zone:</strong>       {selectedReport.time_zone}</Typography>}
+      {selectedReport.total_harm       && <Typography><strong>Total Harm:</strong>           {selectedReport.total_harm}</Typography>}
+      {selectedReport.us_harm          && <Typography><strong>US Harm:</strong>              {selectedReport.us_harm}</Typography>}
+
+      {/* DoD‑specific fields will only render if it is a dod report */}
+      {selectedReport.reporting_unit   && <Typography><strong>Reporting Unit:</strong>       {selectedReport.reporting_unit}</Typography>}
+      {selectedReport.duty_title       && <Typography><strong>Duty Title:</strong>           {selectedReport.duty_title}</Typography>}
+      {selectedReport.duty_type        && <Typography><strong>Duty Type:</strong>            {selectedReport.duty_type}</Typography>}
+      {selectedReport.duty_rank        && <Typography><strong>Duty Rank:</strong>            {selectedReport.duty_rank}</Typography>}
+      {selectedReport.assigned_unit    && <Typography><strong>Assigned Unit:</strong>        {selectedReport.assigned_unit}</Typography>}
+      {selectedReport.combat_command   && <Typography><strong>Combat Command:</strong>       {selectedReport.combat_command}</Typography>}
+
+      {Array.isArray(selectedReport.filereferences) && selectedReport.filereferences.length > 0 && (
+        <Typography>
+        <strong>Files:</strong> {selectedReport.filereferences.join(", ")}
+      </Typography>
+      )}
+    </Box>
+  )}
+
 
         {editReport && (
           <Box sx={{ backgroundColor:"#fff", p:2, mt:2, boxShadow:1, borderRadius:1 }}>
