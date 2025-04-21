@@ -27,6 +27,8 @@ const IntakeFormComponent = ({ onSubmit }) => {
   const [error, setError] = useState("");
   const [location, setLocation] = useState('');
 
+  const [uploadedFiles, setUploadedFiles] = useState([]); //Uploaded file attachments
+
   const [selectedTimeZone, setSelectedTimeZone] = useState('');
   const timeZoneOptions = moment.tz.names(); // Get a list of all time zones
 
@@ -65,20 +67,21 @@ const IntakeFormComponent = ({ onSubmit }) => {
     setCaptchaVerified(false);
   };
 
-  const logFilesUploaded = (uploadedFiles) => {
-    console.log("Files uploaded:", uploadedFiles);
-    // Handle uploaded files (e.g., include them in the form submission)
+  const logFilesUploaded = (files) => {
+    console.log("Files selected:", files);
+    setUploadedFiles(files); // Store the files in state
   };
 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    //const formData = new FormData(formRef.current); // Collect all form fields, including honeypot2
-    //const jsonData = Object.fromEntries(formData.entries()); // Convert FormData to JSON
-
-    //console.log("Submitting form data:", jsonData); // Debugging log
 
     const formData = new FormData(formRef.current);
+    // Add each file to the FormData object with the same field name
+    uploadedFiles.forEach((file) => {
+      formData.append('document_files', file);
+    });
+  
     console.log("Submitting form data (multipart):", [...formData.keys()],[...formData.values()]);
 
     const startDateValue = formData.get("start_datetime"); // Retrieve start date

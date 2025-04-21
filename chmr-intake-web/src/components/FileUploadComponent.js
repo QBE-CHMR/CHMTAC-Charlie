@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 
-const FileUploadComponent = ({ onFilesSelected }) => {
-  const [selectedFiles, setSelectedFiles] = useState([]); // Files to be uploaded
-  const [error, setError] = useState(null); // Error messages
+const FileUploadComponent = ({ onFilesUploaded }) => {
+  const [selectedFiles, setSelectedFiles] = useState([]);
+  const [error, setError] = useState(null);
 
   // Handle file selection
   const handleFileChange = (e) => {
@@ -43,8 +43,8 @@ const FileUploadComponent = ({ onFilesSelected }) => {
     }
   
     // Notify parent component of the selected files
-    if (onFilesSelected) {
-      onFilesSelected(newFiles);
+    if (onFilesUploaded) {
+      onFilesUploaded(newFiles);
     }
   };
 
@@ -54,8 +54,8 @@ const FileUploadComponent = ({ onFilesSelected }) => {
     setSelectedFiles(updatedFiles);
 
     // Notify parent component of the updated file list
-    if (onFilesSelected) {
-      onFilesSelected(updatedFiles);
+    if (onFilesUploaded) {
+      onFilesUploaded(updatedFiles);
     }
   };
 
@@ -66,6 +66,7 @@ const FileUploadComponent = ({ onFilesSelected }) => {
         type="file"
         multiple
         onChange={handleFileChange}
+        name="document_files" // Add a name attribute for the form
         style={{ marginBottom: "10px" }}
       />
 
