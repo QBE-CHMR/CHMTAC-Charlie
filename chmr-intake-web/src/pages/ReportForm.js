@@ -14,7 +14,7 @@ const ReportForm = () => {
     try {
       // Generate a UUID and merge it with the form data
       formData.append("publicUUID", uuidv4());
-      console.log("Submitting multipart data:", [...formData.keys()]);
+      console.log("Submitting multipart data:", formData);
       // Submit the data to the backend
       await submitReport(formData);
 

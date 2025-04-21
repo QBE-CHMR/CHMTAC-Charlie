@@ -107,11 +107,23 @@ async function submitReport(req,res){
   }
 }
 
+// Logging middleware to capture incoming request data
+function logRequestData(req, res, next) {
+  console.log('--- Incoming Request Data ---');
+  console.log('Query:', req.query); // Logs query parameters
+  console.log('Body:', req.body);   // Logs parsed form fields
+  console.log('Files:', req.files); // Logs uploaded files (if any)
+  console.log('Visitor Data:', req.visitorData); // Logs additional visitor data (if available)
+  console.log('-----------------------------');
+  next(); // Pass control to the next middleware
+}
+
 ReportRouter.post(
     '/',
     rateLimiter, // Apply rate limiting
-    pickValidator, // Validate required fields
-    validateReport, // Validate report structure
+    logRequestData, // Log request data before validation
+    //pickValidator, // Validate required fields
+    //validateReport, // Validate report structure
     useragentfilter, // Filter based on user-agent
     captureInfo, // Log request details
     upload.array('files', 5), // Handle file uploads

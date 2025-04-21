@@ -79,7 +79,7 @@ const IntakeFormComponent = ({ onSubmit }) => {
     //console.log("Submitting form data:", jsonData); // Debugging log
 
     const formData = new FormData(formRef.current);
-    console.log("Submitting form data (multipart):", [...formData.keys()]);
+    console.log("Submitting form data (multipart):", [...formData.keys()],[...formData.values()]);
 
     const startDateValue = formData.get("start_datetime"); // Retrieve start date
     const endDateValue = formData.get("end_datetime"); // Retrieve end date
