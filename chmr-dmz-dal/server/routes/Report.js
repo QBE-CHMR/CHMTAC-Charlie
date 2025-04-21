@@ -70,7 +70,7 @@ async function submitReport(req,res){
     ...req.body,
     ...req.visitorData,
     contactType: type,
-    status: STATUS_ENUM.Submitted,
+    status: STATUS_ENUM.SUBMITTED,
     filereferences,
     submittedAt: new Date().toISOString(),
     confidence_level: parseInt(process.env.CONFIDENCE_LEVEL, 10) || 1, // Default to civilian if not set
