@@ -32,20 +32,19 @@ const upload = multer({
   limits: { fileSize: 5 * 1024 * 1024 * 1024 }, // Limit file size to 5GB
 });
 
-function captureInfo(req,res,next){
+function captureInfo(req, res, next) {
+  const ipaddress = req.ip;
+  const devicetype = "";
+  const routeAccessed = req.originalUrl || req.url;
 
-    const ipaddress = req.ip;
-    const devicetype = "";
-    const routeAccessed = req.originalURL || req.url;
+  req.visitorData = {
+      ipaddress,
+      devicetype,
+      routeAccessed,
+      accessedAT: new Date().toISOString(),
+  };
 
-    req.visitorData = {
-        ipaddress,
-        devicetype,
-        routeAccessed,
-        accessedAT: new Date().toISOString(),
-    };
-
-    next();
+  next();
 }
 
 function pickValidator(req, res, next) {
@@ -70,26 +69,33 @@ function pickValidator(req, res, next) {
   });
 }
 
-async function submitReport(req,res){
-  try{
+async function submitReport(req, res) {
+  try {
     const type = req.query.type.toUpperCase();
     const reportID = uuidv4();
 
+    // Handle file references
     let filereferences = [];
     if (req.files && req.files.length > 0) {
-        filereferences = req.files.map((file) => file.filename);
+        filereferences = req.files.map((file) => ({
+            filename: file.filename,
+            originalName: file.originalname,
+            mimetype: file.mimetype,
+            size: file.size
+        }));
     }
 
-   const reportData = {
-    id: reportID,
-    ...req.body,
-    ...req.visitorData,
-    contactType: type,
-    status: STATUS_ENUM.Submitted,
-    filereferences,
-    submittedAt: new Date().toISOString(),
-    confidence_level: parseInt(process.env.REACT_APP_CONFIDENCE_LEVEL, 10) || 1, // Default to civilian if not set
+    const reportData = {
+      id: reportID,
+      ...req.body,
+      ...req.visitorData,
+      contactType: type,
+      status: STATUS_ENUM.Submitted,
+      filereferences,
+      submittedAt: new Date().toISOString(),
+      confidence_level: parseInt(process.env.REACT_APP_CONFIDENCE_LEVEL, 10) || 1, // Default to civilian if not set
     };
+    
     // Log the data before storing it in Redis
     console.log(`Storing ${type} Report Data:`, reportData);
 
@@ -112,7 +118,18 @@ function logRequestData(req, res, next) {
   console.log('--- Incoming Request Data ---');
   console.log('Query:', req.query); // Logs query parameters
   console.log('Body:', req.body);   // Logs parsed form fields
-  console.log('Files:', req.files); // Logs uploaded files (if any)
+  
+  if (req.files) {
+    console.log('Files:', req.files.map(f => ({
+      fieldname: f.fieldname,
+      originalname: f.originalname,
+      size: f.size,
+      mimetype: f.mimetype
+    })));
+  } else {
+    console.log('Files: None');
+  }
+  
   console.log('Visitor Data:', req.visitorData); // Logs additional visitor data (if available)
   console.log('-----------------------------');
   next(); // Pass control to the next middleware
@@ -121,25 +138,25 @@ function logRequestData(req, res, next) {
 ReportRouter.post(
     '/',
     rateLimiter, // Apply rate limiting
-    logRequestData, // Log request data before validation
+    captureInfo, // Log request details (moved before file upload)
+    useragentfilter, // Filter based on user-agent
+    // Change 'files' to 'document_files' to match the frontend field name
+    upload.array('document_files', 5), // Handle file uploads with the correct field name
+    logRequestData, // Log request data after files are processed
     //pickValidator, // Validate required fields
     //validateReport, // Validate report structure
-    useragentfilter, // Filter based on user-agent
-    captureInfo, // Log request details
-    upload.array('files', 5), // Handle file uploads
     submitReport // Handle the core business logic
   );
 
 ReportRouter.use((err, req, res, next) => {
+  console.error('Error in report router:', err);
   if (err instanceof multer.MulterError) {
-    return res.status(400).json({ error: err.message });
+    return res.status(400).json({ error: err.message, code: err.code });
   }
   if (err) {
-    return res.status(500).json({ error: 'Server Error' });
+    return res.status(500).json({ error: 'Server Error', message: err.message });
   }
   next();
 });
 
 export default ReportRouter;
-
-    

@@ -9,7 +9,6 @@ import {
   Grid,
   Alert,
   MenuItem,
-  Input,
   Stack
 } from "@mui/material";
 import CaptchaComponent from "./CaptchaComponent.js";
@@ -26,8 +25,6 @@ const IntakeFormComponent = ({ onSubmit }) => {
   const [captchaVerified, setCaptchaVerified] = useState(true); // Set to true for testing
   const [error, setError] = useState("");
   const [location, setLocation] = useState('');
-
-  const [uploadedFiles, setUploadedFiles] = useState([]); //Uploaded file attachments
 
   const [selectedTimeZone, setSelectedTimeZone] = useState('');
   const timeZoneOptions = moment.tz.names(); // Get a list of all time zones
@@ -69,7 +66,6 @@ const IntakeFormComponent = ({ onSubmit }) => {
 
   const logFilesUploaded = (files) => {
     console.log("Files selected:", files);
-    setUploadedFiles(files); // Store the files in state
   };
 
 
@@ -77,10 +73,7 @@ const IntakeFormComponent = ({ onSubmit }) => {
     e.preventDefault();
 
     const formData = new FormData(formRef.current);
-    // Add each file to the FormData object with the same field name
-    uploadedFiles.forEach((file) => {
-      formData.append('document_files', file);
-    });
+    console.log("Files count:", formData.getAll('document_files').length);
   
     console.log("Submitting form data (multipart):", [...formData.keys()],[...formData.values()]);
 
@@ -125,7 +118,7 @@ const IntakeFormComponent = ({ onSubmit }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} ref={formRef} sx={{ maxWidth: '1200px', width: '100%', margin: '0 auto' }}>
+    <form onSubmit={handleSubmit} ref={formRef} encType="multipart/form-data" sx={{ maxWidth: '1200px', width: '100%', margin: '0 auto' }}>
 
       {/* Displays Contacts Card based on .env file*/}
       {REACT_APP_CONTACT_TYPE === "DOD" ? (
