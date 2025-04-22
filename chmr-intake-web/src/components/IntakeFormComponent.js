@@ -64,11 +64,6 @@ const IntakeFormComponent = ({ onSubmit }) => {
     setCaptchaVerified(false);
   };
 
-  const logFilesUploaded = (files) => {
-    console.log("Files selected:", files);
-  };
-
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -231,7 +226,7 @@ const IntakeFormComponent = ({ onSubmit }) => {
           <Grid spacing={3} direction="column" >
             <Grid item xs={12}>
               <label>Upload External Information Sources</label>
-              <FileUploadComponent onFilesUploaded={logFilesUploaded} />
+              <FileUploadComponent />
             </Grid>
             <Grid item xs={12}>
               <TextField
