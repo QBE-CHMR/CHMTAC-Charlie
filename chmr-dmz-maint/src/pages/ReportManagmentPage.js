@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   Box,
   Button,
@@ -44,7 +44,7 @@ export default function ReportManagementPage() {
   const [editReport,     setEditReport]     = useState(null); 
   const [newStatus,      setNewStatus]      = useState("");
 
-  const loadReports = async () => {
+  const loadReports = useCallback(async () => {
     setError("");
     setInfo("");
     setSelectedReport(null);
@@ -78,9 +78,9 @@ export default function ReportManagementPage() {
       setError("Failed to load reports: " + err.message);
       }
     }
-  };
+  }, [startIndex, maxSize, statusFilter, sortField, sortOrder]);
 
-  useEffect(() => { loadReports(); }, [startIndex, maxSize, statusFilter, sortField, sortOrder]);  
+  useEffect(() => { loadReports(); }, [loadReports]);  
 
   const nextPage = () => {
     if (startIndex + maxSize < totalCount) setStartIndex(startIndex + maxSize);

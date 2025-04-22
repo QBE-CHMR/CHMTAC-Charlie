@@ -23,6 +23,7 @@ const Header = ({ headerText }) => {
             </Typography>
             <img
                 src={dodLogo}
+                alt = "Department of Defense logo"
                 style={{
                     height: "50px", 
                     width: "auto",
