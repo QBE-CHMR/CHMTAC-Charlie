@@ -15,6 +15,8 @@ const ReportForm = () => {
       // Generate a UUID and merge it with the form data
       formData.append("publicUUID", uuidv4());
       console.log("Submitting multipart data:", formData);
+      console.log("Files being submitted:", formData.getAll("document_files").map(f => f.name));
+    
       // Submit the data to the backend
       await submitReport(formData);
 
@@ -25,7 +27,7 @@ const ReportForm = () => {
         }
       }
 
-      const fileNames = formData.getAll("files").map((f) => f.name);
+      const fileNames = formData.getAll("document_files").map((f) => f.name);
       if (fileNames.length) plain.files = fileNames;
       // Navigate to the submission page with the submitted data
       navigate("/SubmissionPage", { state: { plain } });

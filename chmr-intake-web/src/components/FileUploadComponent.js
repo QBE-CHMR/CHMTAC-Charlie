@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 
 const FileUploadComponent = ({ onFilesUploaded }) => {
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [error, setError] = useState(null);
+  const fileInputRef = useRef(null); // Add a ref for the file input
 
   // Handle file selection
   const handleFileChange = (e) => {
@@ -10,24 +11,22 @@ const FileUploadComponent = ({ onFilesUploaded }) => {
     const newFiles = [...selectedFiles];
     const errors = [];
     const MAX_FILE_SIZE = 5 * 1024 * 1024 * 1024; // 5GB in bytes
-  
+    
     for (const file of files) {
-      // Check if the file name already exists
+      // Validation logic stays the same
       if (newFiles.some((f) => f.name === file.name)) {
         errors.push(`A file with the name "${file.name}" has already been selected.`);
-        continue; // Skip this file
+        continue;
       }
 
-      // Check if the file size exceeds the limit
       if (file.size > MAX_FILE_SIZE) {
         errors.push(`The file "${file.name}" exceeds the 5GB size limit.`);
-        continue; // Skip this file
+        continue;
       }
   
-      // Check if the file limit is exceeded
       if (newFiles.length >= 5) {
         errors.push("You can only upload up to 5 files.");
-        break; // Stop processing further files
+        break;
       }
   
       newFiles.push(file);
@@ -35,14 +34,13 @@ const FileUploadComponent = ({ onFilesUploaded }) => {
   
     setSelectedFiles(newFiles);
   
-    // Display all errors (if any)
     if (errors.length > 0) {
       setError(errors.join(" "));
     } else {
       setError(null);
     }
   
-    // Notify parent component of the selected files
+    // Notify parent component
     if (onFilesUploaded) {
       onFilesUploaded(newFiles);
     }
@@ -53,24 +51,41 @@ const FileUploadComponent = ({ onFilesUploaded }) => {
     const updatedFiles = selectedFiles.filter((file) => file.name !== fileName);
     setSelectedFiles(updatedFiles);
 
-    // Notify parent component of the updated file list
     if (onFilesUploaded) {
       onFilesUploaded(updatedFiles);
     }
   };
 
+  // Create a DataTransfer object and append all files to it
+  useEffect(() => {
+    // This effect runs whenever selectedFiles changes
+    if (fileInputRef.current) {
+      // Create a new DataTransfer object
+      const dataTransfer = new DataTransfer();
+      
+      // Add each selected file to the DataTransfer object
+      selectedFiles.forEach(file => {
+        dataTransfer.items.add(file);
+      });
+      
+      // Set the file input's files property to the DataTransfer files
+      fileInputRef.current.files = dataTransfer.files;
+    }
+  }, [selectedFiles]);
+
   return (
     <div>
-      {/* File Input */}
+      {/* File Input with ref */}
       <input
+        ref={fileInputRef}
         type="file"
         multiple
         onChange={handleFileChange}
-        name="document_files" // Add a name attribute for the form
+        name="document_files" 
         style={{ marginBottom: "10px" }}
       />
 
-      {/* Selected Files */}
+      {/* Selected Files list remains the same */}
       <ul>
         {selectedFiles.map((file) => (
           <li key={file.name}>
@@ -86,7 +101,6 @@ const FileUploadComponent = ({ onFilesUploaded }) => {
         ))}
       </ul>
 
-      {/* Error Message */}
       {error && <p style={{ color: "red" }}>{error}</p>}
     </div>
   );
