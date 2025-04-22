@@ -70,7 +70,13 @@ export default function ReportManagementPage() {
       setReports(list);
       setTotalCount(data.totalCount ?? list.length);
     } catch (err) {
+      if(err.response?.status === 404){
+        setReports([]);
+        setTotalCount(0);
+        setInfo("There are no reports at the moment.");
+      }else{
       setError("Failed to load reports: " + err.message);
+      }
     }
   };
 
@@ -119,8 +125,7 @@ export default function ReportManagementPage() {
   return (
     <Box sx={{ backgroundColor:"#f5f5f5", minHeight:"100vh" }}>
       <Header
-        title="Civilian Harm Reporting"
-        headerText="Manage your submitted reports below:"
+        title="Civilian Harm REPORTS MAINTENANCE"
       />
 
       <Container maxWidth={false} sx={{ pt:5 }}>
