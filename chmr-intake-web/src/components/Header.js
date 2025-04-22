@@ -19,7 +19,7 @@ const Header = ({ headerText }) => {
                 mr: 2, // Add spacing between text and logo
                 }}
             >
-                Civilian Harm Mitigation
+                Civilian Harm Reporting
             </Typography>
             <img
                 src={dodLogo}
