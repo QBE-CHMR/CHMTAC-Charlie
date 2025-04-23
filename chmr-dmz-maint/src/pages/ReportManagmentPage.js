@@ -70,14 +70,10 @@ export default function ReportManagementPage() {
       setReports(list);
       setTotalCount(data.totalCount ?? list.length);
     } catch (err) {
-      if(err.response?.status === 404){
-        setReports([]);
-        setTotalCount(0);
-        setInfo("There are no reports at the moment.");
-      }else{
+      // This is when we actually have real errors
       setError("Failed to load reports: " + err.message);
       }
-    }
+    
   }, [startIndex, maxSize, statusFilter, sortField, sortOrder]);
 
   useEffect(() => { loadReports(); }, [loadReports]);  
