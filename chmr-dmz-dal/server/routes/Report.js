@@ -90,7 +90,7 @@ async function submitReport(req, res) {
       ...req.body,
       ...req.visitorData,
       contactType: type,
-      status: STATUS_ENUM.STATUS_ENUM.SUBMITTED,
+      status: STATUS_ENUM.SUBMITTED,
       filereferences,
       submittedAt: new Date().toISOString(),
       confidence_level: parseInt(process.env.REACT_APP_CONFIDENCE_LEVEL, 10) || 1, // Default to civilian if not set
