@@ -19,10 +19,11 @@ const Header = ({ headerText }) => {
                 mr: 2, // Add spacing between text and logo
                 }}
             >
-                Civilian Harm Reporting
+                Civilian Harm Reports MAINTENANCE
             </Typography>
             <img
                 src={dodLogo}
+                alt = "Department of Defense logo"
                 style={{
                     height: "50px", 
                     width: "auto",
