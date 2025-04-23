@@ -9,6 +9,10 @@
 # production
 /build
 
+# local file storage
+/files/*
+!/files/.gitkeep
+
 # misc
 .DS_Store
 .env.local

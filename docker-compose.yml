@@ -25,7 +25,7 @@ services:
     env_file:
       - .env
     environment:
-      DAL_HOST: http://chmr-dmz-dal:5000
+      REACT_APP_DAL_HOST: http://chmr-dmz-dal:5000
     ports:
       - "${PORT_INTAKE}:3000" # Expose intake-web to the host
     networks:
@@ -39,7 +39,7 @@ services:
     env_file:
       - .env
     environment:
-      DAL_HOST: http://chmr-dmz-dal:5000
+      REACT_APP_DAL_HOST: http://chmr-dmz-dal:5000
     ports:
       - "${PORT_MAINT}:3000" # Expose maint to the host
     networks:

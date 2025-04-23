@@ -9,16 +9,16 @@ import {
   Grid,
   Alert,
   MenuItem,
-  Input,
   Stack
 } from "@mui/material";
 import CaptchaComponent from "./CaptchaComponent.js";
 import DodContactInfoCard from "./DodContactInfoCard.js";
 import CivilianContactInfoCard from "./CivilianContactInfoCard.js";
+import FileUploadComponent from "./FileUploadComponent.js";
 import moment from "moment-timezone";
 
 // Choose between DOD or CIVILIAN form
-const CONTACT_TYPE = process.env.REACT_APP_CONTACT_TYPE || "DOD"; // Default to "DOD"
+const REACT_APP_CONTACT_TYPE = process.env.REACT_APP_CONTACT_TYPE || "DOD"; // Default to "DOD"
 
 const IntakeFormComponent = ({ onSubmit }) => {
   const formRef = useRef(null); // Create a ref for the form element
@@ -66,13 +66,11 @@ const IntakeFormComponent = ({ onSubmit }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    //const formData = new FormData(formRef.current); // Collect all form fields, including honeypot2
-    //const jsonData = Object.fromEntries(formData.entries()); // Convert FormData to JSON
-
-    //console.log("Submitting form data:", jsonData); // Debugging log
 
     const formData = new FormData(formRef.current);
-    console.log("Submitting form data (multipart):", [...formData.keys()]);
+    console.log("Files count:", formData.getAll('document_files').length);
+  
+    console.log("Submitting form data (multipart):", [...formData.keys()],[...formData.values()]);
 
     const startDateValue = formData.get("start_datetime"); // Retrieve start date
     const endDateValue = formData.get("end_datetime"); // Retrieve end date
@@ -115,10 +113,10 @@ const IntakeFormComponent = ({ onSubmit }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} ref={formRef} sx={{ maxWidth: '1200px', width: '100%', margin: '0 auto' }}>
+    <form onSubmit={handleSubmit} ref={formRef} encType="multipart/form-data" sx={{ maxWidth: '1200px', width: '100%', margin: '0 auto' }}>
 
       {/* Displays Contacts Card based on .env file*/}
-      {CONTACT_TYPE === "DOD" ? (
+      {REACT_APP_CONTACT_TYPE === "DOD" ? (
         <DodContactInfoCard />
       ) : (
         <CivilianContactInfoCard />
@@ -228,12 +226,7 @@ const IntakeFormComponent = ({ onSubmit }) => {
           <Grid spacing={3} direction="column" >
             <Grid item xs={12}>
               <label>Upload External Information Sources</label>
-              <Input
-                type="file"
-                name="files"
-                inputProps={{ multiple: true }}
-                fullWidth
-              />
+              <FileUploadComponent />
             </Grid>
             <Grid item xs={12}>
               <TextField

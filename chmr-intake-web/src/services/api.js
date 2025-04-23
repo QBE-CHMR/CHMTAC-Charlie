@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: process.env.DAL_HOST,
+  baseURL: process.env.REACT_APP_DAL_HOST,
   timeout: 10000,
 });
 
@@ -10,25 +10,19 @@ export const submitReport = async (data) => {
     const contactType = process.env.REACT_APP_CONTACT_TYPE || 'DOD';
     const endpoint = `/report?type=${encodeURIComponent(contactType)}`;
 
-
-    let formData;
-
-    if (data instanceof FormData) {
-      formData = data;
-    } else {
-      formData = new FormData();
-      for (const key of Object.keys(data)) {
-        if (key !== "files") formData.append(key, data[key]);
-      }
-      if (data.files && data.files.length > 0) {
-        for (const file of data.files) formData.append("files", file);
-      }
+    // Debugging: Log the FormData object
+    console.log('FormData being submitted:');
+    for (let pair of data.entries()) {
+      console.log(`${pair[0]}: ${pair[1]}`);
     }
 
-    const response = await api.post(endpoint, formData);
+    const response = await api.post(endpoint, data, {
+      headers: { 'Content-Type': 'multipart/form-data' }, // Optional: Axios sets this automatically
+    });
+
     return response.data;
   } catch (error) {
-    console.error('Error submitting the report:', error);
+    console.error('Error submitting the report:', error.response?.data || error.message);
     throw error;
   }
 };
