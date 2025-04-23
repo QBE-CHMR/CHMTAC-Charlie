@@ -62,7 +62,6 @@ export default function ReportManagementPage() {
                  : [];
 
       if (list.length === 0) {
-        setInfo("No reports found for the selected status.");
         setReports([]);
         setTotalCount(0);
         return;
@@ -70,8 +69,7 @@ export default function ReportManagementPage() {
       setReports(list);
       setTotalCount(data.totalCount ?? list.length);
     } catch (err) {
-      // This is when we actually have real errors
-      setError("Failed to load reports: " + err.message);
+      setInfo("No reports found for the selected status.");
       }
     
   }, [startIndex, maxSize, statusFilter, sortField, sortOrder]);
