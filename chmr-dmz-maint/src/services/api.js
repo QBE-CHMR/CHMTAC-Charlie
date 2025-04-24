@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: process.env.DMZ_DAL_URL, // Backend URL
+  baseURL: process.env.DMZ_DAL_URL || 'http://localhost:5000', // Backend URL
   timeout: 10000,
 });
 

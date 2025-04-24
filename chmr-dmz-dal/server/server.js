@@ -5,6 +5,7 @@ import cookieParser from 'cookie-parser';
 import ReportRouter from './routes/Report.js';
 import managementRouter from './routes/ReportManagement.js';
 import './redisClient.js';
+import path from "path";
 
 const app = express();
 
@@ -16,6 +17,8 @@ app.use(cors({
 }));
 app.use(bodyParser.json());
 app.use(cookieParser());
+
+app.use("/files", express.static(path.resolve("files")));
 
 app.use("/report", ReportRouter);
 app.use('/report/management', managementRouter);

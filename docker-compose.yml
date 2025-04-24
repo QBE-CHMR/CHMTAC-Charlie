@@ -18,6 +18,8 @@ services:
       - chmr-dmz-redis # Ensure Redis starts before DAL
     ports:
       - "5000:5000" # Expose chmr-dmz-dal to the host
+    volumes:
+      - filedata:/usr/server/app/files
 
   intake-web:
     build:
@@ -51,3 +53,6 @@ services:
     image: redis:7
     networks:
       - dmznet
+
+volumes:
+  filedata:
