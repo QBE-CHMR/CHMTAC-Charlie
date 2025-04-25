@@ -9,7 +9,6 @@ import './redisClient.js';
 const app = express();
 
 // Middleware
-const cors = require('cors');
 app.use(cors({ origin: '*' })); // Allow all origins (for testing purposes)
 
 app.use(bodyParser.json());

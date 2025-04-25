@@ -11,6 +11,10 @@ RUN npm run build
 # Use Nginx to serve the static files
 FROM nginx:alpine
 COPY --from=build /app/build /usr/share/nginx/html
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
 
 EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+# CMD ["nginx", "-g", "daemon off;"]
+# Add a startup delay to ensure DNS resolution
+CMD ["sh", "-c", "sleep 5 && nginx -g 'daemon off;'"]
