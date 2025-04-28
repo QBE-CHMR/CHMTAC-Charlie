@@ -1,14 +1,12 @@
 import axios from 'axios';
 
-const api = axios.create({
-  baseURL: process.env.REACT_APP_DAL_HOST,
-  timeout: 10000,
-});
+// Use relative paths for API calls
+const API_BASE_URL = '/report';
 
 export const submitReport = async (data) => {
   try {
     const contactType = process.env.REACT_APP_CONTACT_TYPE || 'DOD';
-    const endpoint = `/report?type=${encodeURIComponent(contactType)}`;
+    const endpoint = `${API_BASE_URL}?type=${encodeURIComponent(contactType)}`;
 
     // Debugging: Log the FormData object
     console.log('FormData being submitted:');
@@ -16,7 +14,7 @@ export const submitReport = async (data) => {
       console.log(`${pair[0]}: ${pair[1]}`);
     }
 
-    const response = await api.post(endpoint, data, {
+    const response = await axios.post(endpoint, data, {
       headers: { 'Content-Type': 'multipart/form-data' }, // Optional: Axios sets this automatically
     });
 
@@ -27,4 +25,4 @@ export const submitReport = async (data) => {
   }
 };
 
-export default api;
+export default axios;
