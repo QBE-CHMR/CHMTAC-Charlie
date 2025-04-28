@@ -16,6 +16,8 @@ services:
       - dmznet
     depends_on:
       - chmr-dmz-redis # Ensure Redis starts before DAL
+    volumes:
+      - filedata:/usr/server/app/files
 
   intake-web:
     build:
@@ -49,3 +51,7 @@ services:
     image: redis:7
     networks:
       - dmznet
+  
+volumes:
+  filedata:
+
