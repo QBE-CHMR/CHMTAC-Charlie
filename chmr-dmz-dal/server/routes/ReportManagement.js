@@ -62,9 +62,10 @@ managementRouter.get('/', async (req, res) => {
 
       const startNum = parseInt(start);
       const maxNum = parseInt(max);
+      const totalCount = filteredReports.length;
       const paginatedReports = filteredReports.slice(startNum, startNum + maxNum);
   
-      res.status(200).json(paginatedReports);
+      res.status(200).json({totalCount, reports: paginatedReports});
     } catch (error) {
       console.error('Error fetching reports:', error);
       res.status(500).json({ error: 'Server Error' });
