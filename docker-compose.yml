@@ -16,6 +16,10 @@ services:
       - dmznet
     depends_on:
       - chmr-dmz-redis # Ensure Redis starts before DAL
+    ports:
+      - "5000:5000" # Expose chmr-dmz-dal to the host
+    volumes:
+      - filedata:/usr/server/app/files
 
   intake-web:
     build:
@@ -23,9 +27,9 @@ services:
     env_file:
       - .env
     environment:
-      REACT_APP_DAL_HOST: http://chmr-dmz-dal:5000 # DAL is accessible via dmznet
+      REACT_APP_DAL_HOST: http://chmr-dmz-dal:5000
     ports:
-      - "3000:80" # Expose container's port to the host
+      - "${PORT_INTAKE}:3000" # Expose intake-web to the host
     networks:
       - dmznet
     depends_on:
@@ -37,9 +41,9 @@ services:
     env_file:
       - .env
     environment:
-      REACT_APP_DAL_HOST: http://chmr-dmz-dal:5000 # DAL is accessible via dmznet
+      REACT_APP_DAL_HOST: http://chmr-dmz-dal:5000
     ports:
-      - "3001:3000" # Expose maint to the host
+      - "${PORT_MAINT}:3000" # Expose maint to the host
     networks:
       - dmznet
     depends_on:
@@ -49,3 +53,6 @@ services:
     image: redis:7
     networks:
       - dmznet
+
+volumes:
+  filedata:
