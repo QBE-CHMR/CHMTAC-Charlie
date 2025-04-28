@@ -1,6 +1,8 @@
 import express from 'express';
 import { redisClient } from '../redisClient.js';
 import { STATUS_ENUM } from '../constants/statusEnum.js';
+import path from "path";
+import fs from "fs/promises"
 
 const managementRouter = express.Router();
 
@@ -10,6 +12,11 @@ async function keyFor(id) {
     if (await redisClient.exists(k)) return k;
   }
   return null;
+}
+
+function normaliseFiles(arr = []){
+  return arr.map(f=> typeof f === "string"? {filename:f, originalName: f} : f);
+
 }
 
 // Get reports by status, if no status is provided, return all reports
@@ -55,9 +62,10 @@ managementRouter.get('/', async (req, res) => {
 
       const startNum = parseInt(start);
       const maxNum = parseInt(max);
+      const totalCount = filteredReports.length;
       const paginatedReports = filteredReports.slice(startNum, startNum + maxNum);
   
-      res.status(200).json(paginatedReports);
+      res.status(200).json({totalCount, reports: paginatedReports});
     } catch (error) {
       console.error('Error fetching reports:', error);
       res.status(500).json({ error: 'Server Error' });
@@ -73,7 +81,9 @@ managementRouter.get('/:id', async (req, res) => {
       if (!report) {
         return res.status(404).json({ error: 'Report not found' });
       }
-      res.status(200).json(JSON.parse(report));
+      const parsed = JSON.parse(report)
+      parsed.filereferences = normaliseFiles(parsed.filereferences);
+      res.status(200).json(parsed);
     } catch (error) {
       console.error('Error fetching report:', error);
       res.status(500).json({ error: 'Server Error' });
@@ -106,6 +116,19 @@ managementRouter.delete('/:id', async (req, res) => {
   } catch (error) {
     console.error('Error deleting report:', error);
     res.status(500).json({ error: 'Server Error' });
+  }
+});
+
+const FILE_DIR =  "/usr/server/app/files";
+
+managementRouter.get("/files/:filename", async (req, res) => {
+  try {
+    const fname = req.params.filename;
+    const abs   = path.join(FILE_DIR, fname);
+    await fs.access(abs);
+    res.download(abs, fname);        
+  } catch (err) {
+    res.status(404).json({ error: "File not found" });
   }
 });
   

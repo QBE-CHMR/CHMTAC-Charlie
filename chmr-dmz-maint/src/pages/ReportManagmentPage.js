@@ -257,13 +257,36 @@ export default function ReportManagementPage() {
       {selectedReport.assigned_unit    && <Typography><strong>Assigned Unit:</strong>        {selectedReport.assigned_unit}</Typography>}
       {selectedReport.combat_command   && <Typography><strong>Combat Command:</strong>       {selectedReport.combat_command}</Typography>}
 
-      {Array.isArray(selectedReport.filereferences) && selectedReport.filereferences.length > 0 && (
-        <Typography>
-        <strong>Files:</strong> {selectedReport.filereferences.join(", ")}
-      </Typography>
-      )}
-    </Box>
-  )}
+      {Array.isArray(selectedReport.filereferences) &&
+      selectedReport.filereferences.length > 0 && (
+        <Box sx={{ mt: 1 }}>
+        <strong>Files:</strong>{" "}
+        {(() => {
+          const FILE_BASE =
+            (process.env.REACT_APP_DAL_HOST || "http://chmr-dmz-dal:5000").replace(/\/$/, "");
+            return selectedReport.filereferences.map((f, idx) => {
+        const fileName = typeof f === "string" ? f : f.filename;
+        const label    = typeof f === "string" ? f : f.originalName || f.filename;
+
+        return (
+          <React.Fragment key={fileName}>
+            <a
+              href={`${FILE_BASE}/report/management/files/${encodeURIComponent(fileName)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              download
+            >
+              {label}
+            </a>
+            {idx < selectedReport.filereferences.length - 1 ? ", " : ""}
+          </React.Fragment>
+        );
+      });
+    })()}
+  </Box>
+)}
+</Box>
+)}
 
 
         {editReport && (
