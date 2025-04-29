@@ -51,7 +51,7 @@ export default function ReportManagementPage() {
     setEditReport(null);
 
     try {
-      let url = `/report/management?start=${startIndex}&max=${maxSize}`;
+      let url = `/management?start=${startIndex}&max=${maxSize}`;
       if (statusFilter) url += `&status=${encodeURIComponent(statusFilter)}`;
       url += `&sortField=${encodeURIComponent(sortField)}&sortOrder=${encodeURIComponent(sortOrder)}`;
 
@@ -86,7 +86,7 @@ export default function ReportManagementPage() {
   const viewReport = async (id) => {
     setError("");
     try {
-      const { data } = await api.get(`/report/management/${encodeURIComponent(id)}`);
+      const { data } = await api.get(`/management/${encodeURIComponent(id)}`);
       setSelectedReport(data);
       setEditReport(null);
     } catch (err) {
@@ -103,8 +103,7 @@ export default function ReportManagementPage() {
   const saveStatus = async () => {
     if (!editReport) return;
     try {
-      await api.put(
-        `/report/management/${encodeURIComponent(editReport.id)}`,
+      await api.put(`/management/${encodeURIComponent(editReport.id)}`,
         { status: newStatus }
       );
       setReports(prev =>
@@ -258,33 +257,28 @@ export default function ReportManagementPage() {
       {selectedReport.combat_command   && <Typography><strong>Combat Command:</strong>       {selectedReport.combat_command}</Typography>}
 
       {Array.isArray(selectedReport.filereferences) &&
-      selectedReport.filereferences.length > 0 && (
-        <Box sx={{ mt: 1 }}>
-        <strong>Files:</strong>{" "}
-        {(() => {
-          const FILE_BASE =
-            (process.env.REACT_APP_DAL_HOST || "http://chmr-dmz-dal:5000").replace(/\/$/, "");
-            return selectedReport.filereferences.map((f, idx) => {
-        const fileName = typeof f === "string" ? f : f.filename;
-        const label    = typeof f === "string" ? f : f.originalName || f.filename;
-
-        return (
-          <React.Fragment key={fileName}>
-            <a
-              href={`${FILE_BASE}/report/management/files/${encodeURIComponent(fileName)}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              download
-            >
-              {label}
-            </a>
-            {idx < selectedReport.filereferences.length - 1 ? ", " : ""}
-          </React.Fragment>
-        );
-      });
-    })()}
-  </Box>
-)}
+       selectedReport.filereferences.length > 0 && (
+         <Box sx={{ mt:1 }}>
+           <strong>Files:</strong>{" "}
+           {selectedReport.filereferences.map((f, idx) => {
+             const fileName = typeof f === "string" ? f : f.filename;
+             const label    = typeof f === "string" ? f : f.originalName || f.filename;
+             return (
+              <React.Fragment key={fileName}>
+                 <a
+                  href={`/report/management/files/${encodeURIComponent(fileName)}`}
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   download
+                 >
+                   {label}
+                 </a>
+                 {idx < selectedReport.filereferences.length - 1 ? ", " : ""}
+               </React.Fragment>
+             );
+           })}
+         </Box>
+      )}
 </Box>
 )}
 
