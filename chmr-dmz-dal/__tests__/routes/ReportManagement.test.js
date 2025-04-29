@@ -1,3 +1,5 @@
+jest.mock('../../server/redisClient.js');
+
 import request from 'supertest';
 import app from '../../server/server.js';
 
