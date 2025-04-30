@@ -1,5 +1,3 @@
-version: '3.8'
-
 networks:
   dmznet:
     driver: bridge
@@ -27,7 +25,7 @@ services:
     environment:
       REACT_APP_DAL_HOST: http://chmr-dmz-dal:5000 # DAL is accessible via dmznet
     ports:
-      - "3000:80" # Expose container's port to the host
+      - "${PORT_INTAKE}:80" # Expose container's port to the host
     networks:
       - dmznet
     depends_on:
@@ -41,7 +39,7 @@ services:
     environment:
       REACT_APP_DAL_HOST: http://chmr-dmz-dal:5000 # DAL is accessible via dmznet
     ports:
-      - "3001:80" # Expose maint to the host
+      - "${PORT_MAINT}:80" # Expose maint to the host
     networks:
       - dmznet
     depends_on:
@@ -54,4 +52,3 @@ services:
   
 volumes:
   filedata:
-
