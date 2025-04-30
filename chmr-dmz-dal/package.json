@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "main": "server.js",
   "type": "module",
+  "jest": {
+    "testEnvironment": "node",
+    "transform": {}
+  },
   "scripts": {
     "test": "set NODE_ENV=test && node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "start": "node server.js"

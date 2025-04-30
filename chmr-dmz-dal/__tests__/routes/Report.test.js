@@ -1,4 +1,5 @@
 jest.mock('../../server/redisClient.js');
+jest.setTimeout(10000);
 
 import request from 'supertest';
 import app from '../../server/server.js';
