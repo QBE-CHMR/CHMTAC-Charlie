@@ -50,12 +50,12 @@ The `dmz-dal` (Data Access Layer) is a Node.js/Express service that acts as the 
   - Validates fields based on the `type` query parameter (`DOD` or `CIVILIAN`).
   - Stores the report in Redis with a unique ID.
   - Example Response:
-    ```json
-    {
-      "message": "Report Submitted!",
-      "reportID": "123e4567-e89b-12d3-a456-426614174000"
-    }
-    ```
+  ```
+  {
+    "message": "Report Submitted!",
+    "reportID": "163e4567-e89b-12d3-a456-426614174000"
+  }
+  ```
 
 ### Report Management (`/report/management`)
 - **GET `/report/management`**:
