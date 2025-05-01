@@ -157,7 +157,7 @@ The `dmz-dal` (Data Access Layer) is a Node.js/Express service that acts as the 
 ---
 
 ## Future Improvements
-
+- Impliment more security features.
 - Add back unit tests for middleware and routes.
 - Enhance error handling and logging for better debugging.
 
