@@ -30,7 +30,7 @@ The `dmz-dal` (Data Access Layer) is a Node.js/Express service that acts as the 
 - **chmr-dmz-dal/**
   - **server/**
     - `constants/` - Shared constants (status enums)
-    - `middleware/` - Custom middleware (validation, rate limiting, etc)
+    - `middleware/` - Custom middleware (validation, rate limiting, etc.)
     - `routes/` - API route handlers (Report, ReportManagement)
     - `redisClient.js` - Redis client configuration
     - `server.js` - Main Express server entry point
@@ -44,7 +44,7 @@ The `dmz-dal` (Data Access Layer) is a Node.js/Express service that acts as the 
 
 ## Endpoints
 
-### **Report Submission (`/report`)**
+### Report Submission (`/report`)
 - **POST `/report`**:
   - Accepts form data with required fields and optional file uploads.
   - Validates fields based on the `type` query parameter (`DOD` or `CIVILIAN`).
@@ -57,7 +57,7 @@ The `dmz-dal` (Data Access Layer) is a Node.js/Express service that acts as the 
     }
     ```
 
-### **Report Management (`/report/management`)**
+### Report Management (`/report/management`)
 - **GET `/report/management`**:
   - Fetches reports with optional filters (`status`, `sortField`, `sortOrder`, `start`, `max`).
   - Supports pagination and sorting.
@@ -121,11 +121,11 @@ The `dmz-dal` (Data Access Layer) is a Node.js/Express service that acts as the 
 
 ## Environment Variables
 
-### **Backend Variables**:
+### Backend Variables:
 - `REDIS_HOST`: Redis connection string (e.g., `redis://localhost:6379`).
 - `PORT`: Port for the Express server (default: `5000`).
 
-### **Frontend Variables**:
+### Frontend Variables:
 - `REACT_APP_API_BASE_URL`: Base URL for API requests.
 - `REACT_APP_DAL_HOST`: Host URL for file downloads.
 
@@ -149,11 +149,11 @@ The `dmz-dal` (Data Access Layer) is a Node.js/Express service that acts as the 
    - Verify that the Redis container is running and accessible.
 
 2. **File Upload**:
-   - May need to adjust max file size down to 1 or 2 GB to preven large uploads.
+   - May need to adjust max file size down to 1 or 2 GB to prevent large uploads.
    - Ensure the `files/` directory exists and has the correct permissions.
 
 3. **Rate Limiting**:
-    - May need to adjust this lower (less requests per minute) for production build
+   - May need to adjust this lower (fewer requests per minute) for production builds.
    - If rate limiting blocks valid requests, adjust the `max` or `windowMs` values in `rateLimiter.js`.
 
 ---
