@@ -1,6 +1,8 @@
 networks:
   dmznet:
     driver: bridge
+  dmpnet:
+    driver: bridge
 
 services:
   chmr-dmz-dal:
@@ -50,5 +52,16 @@ services:
     networks:
       - dmznet
   
+  chmr-dmp-postgres:
+    build:
+      context: ./chmr-dmp-postgres
+    restart: always
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d
+      - ./postgres-data:/var/lib/postgresql/data
+    networks:
+      - dmpnet
+
 volumes:
   filedata:
+  postgres-data:
