@@ -1,10 +1,16 @@
-console.log('Test file is being loaded...');
-import { jest } from '@jest/globals';
+jest.mock('../server/redisClient.js'); // Automatically uses the mock from __mocks__/redisClient.js
+import redisClient from '../server/redisClient.js'; // Import the mocked Redis client
+
+// Ensure the mock Redis client methods are properly mocked
+redisClient.on.mockImplementation(() => {});
+redisClient.connect.mockResolvedValue(true);
+redisClient.quit.mockResolvedValue(true);
+
 import request from 'supertest';
 import app from '../server/server.js';
-console.log('App and dependencies imported successfully.');
 
-// jest.setTimeout(10000);
+console.log('Test file is being loaded...');
+console.log('App and dependencies imported successfully.');
 
 describe('Server Regression Tests', () => {
   it('should respond to the root route with 404', async () => {
