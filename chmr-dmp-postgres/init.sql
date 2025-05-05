@@ -1,26 +1,13 @@
-/***
-DROP TABLE IF EXISTS chmr_decision CASCADE;
-DROP TABLE IF EXISTS chmr_report CASCADE;
-DROP TABLE IF EXISTS chmr_observation CASCADE;
-DROP TABLE IF EXISTS chmr_person CASCADE;
-DROP TABLE IF EXISTS chmr_us_military_operation CASCADE;
-DROP TABLE IF EXISTS chmr_associated_operation CASCADE;
-DROP TABLE IF EXISTS chmr_associated_information CASCADE;
-DROP TABLE IF EXISTS chmr_information_source CASCADE;
-DROP TABLE IF EXISTS chmr_associated_report CASCADE;
-DROP TABLE IF EXISTS chmr_associated_weapon CASCADE;
-DROP TABLE IF EXISTS chmr_weapon CASCADE;
-DROP TABLE IF EXISTS chmr_platform CASCADE;
-DROP TABLE IF EXISTS chmr_associated_platform CASCADE;
-DROP TABLE IF EXISTS chmr_info_control CASCADE;
-DROP TABLE IF EXISTS chmr_initial_review CASCADE;
-DROP TABLE IF EXISTS chmr_assessment CASCADE;
-DROP TABLE IF EXISTS chmr_investigation CASCADE;
-DROP TABLE IF EXISTS chmr_user_role CASCADE;
-DROP TABLE IF EXISTS chmr_associated_user_role CASCADE;
-DROP TABLE IF EXISTS chmr_user_group CASCADE;
-DROP TABLE IF EXISTS chmr_associated_user_group CASCADE;
-***/
+/*
+
+CREATE DATABASE chmr_dmp
+    WITH
+    OWNER = postgres
+    ENCODING = 'UTF8'
+    LOCALE_PROVIDER = 'libc'
+    CONNECTION LIMIT = -1
+    IS_TEMPLATE = False;
+*/
 
 DROP TABLE IF EXISTS chmr_assessment;
 CREATE TABLE "chmr_assessment"
@@ -261,8 +248,8 @@ CREATE TABLE "chmr_person"
 ( 
 	 id						UUID   NOT NULL	
 	,full_name				VARCHAR(128)	NULL
-	,given_name				VARCHAR(50)	NOT NULL
-	,surname				VARCHAR(50)	NOT NULL
+	,given_name				VARCHAR(50)	NULL
+	,surname				VARCHAR(50)	NULL
 	,assigned_unit			VARCHAR(50)	NULL
 	,reporting_unit			VARCHAR(50)	NULL
 	,dod_id					INT	NULL
@@ -271,10 +258,11 @@ CREATE TABLE "chmr_person"
 	,rank					VARCHAR(24)	NULL
 	,phone_commercial		VARCHAR(16)	NULL
 	,dsn_phone				VARCHAR(12)	NULL
-	,email_address			VARCHAR(320)	NULL
+	,email					VARCHAR(320)	NULL
 	,combatant_command		VARCHAR(16)	NULL
 	,other_command			VARCHAR(16)	NULL
 	,group_id				UUID  NULL
+	,is_system_user			BOOLEAN	NOT NULL
 	,created_datetime		TIMESTAMP  NOT NULL
 	,created_person_id		UUID NOT NULL
 	,last_accessed_datetime TIMESTAMP  NOT NULL
@@ -307,6 +295,9 @@ CREATE TABLE chmr_report
 	,confidence_level		SMALLINT	NOT NULL
 	,report_status			SMALLINT	NOT NULL
 	,reporter_person_id		UUID	NOT NULL
+	,full_name				VARCHAR(128)	NULL
+	,phone_commercial		VARCHAR(16)	NULL
+	,email					varchar(320)	NULL
 	,observation_id			UUID	NOT NULL
 	,poc1_name				VARCHAR(300)	NULL
 	,poc1_info				VARCHAR(500)	NULL
@@ -705,22 +696,47 @@ CREATE OR REPLACE FUNCTION get_person_id(
 										_rank				varchar(24),
 										_phone_commercial	varchar(16),
 										_dsn_phone			varchar(12),
-										_email_address		varchar(320),
+										_email				varchar(320),
 										_combatant_command	varchar(16),
 										_other_command		varchar(16),
 										is_from_public		bool
 ) RETURNS uuid AS $$
 DECLARE
+	system_person_name CONSTANT varchar(128) := 'SYSTEM_PERSON';
 	pers_id uuid;
 BEGIN
-	-- if from public, search for matching full_name and either comm phone or email
+	-- if from public: 1. Search for system person
+	--                    a. If not found then insert it
+	--                    b. If found then use existing
+	
+	-- SELECT id into pers_id FROM chmr_person 
+	-- 	where (is_from_public AND lower(full_name::text) = lower(_full_name) AND 
+	-- 				(lower(phone_commercial) = lower(_phone_commercial) OR lower(email) = lower(_email))) OR
+	-- 	      (is_from_public = false AND dod_id = _dod_id);
+
 	SELECT id into pers_id FROM chmr_person 
-	where (is_from_public AND lower(full_name::text) = lower(_full_name) AND 
-				(lower(phone_commercial) = lower(_phone_commercial) OR lower(email_address) = lower(_email_address))) OR
-	      (is_from_public = false AND dod_id = _dod_id);
+		where (is_from_public AND is_system_user) OR (is_from_public = false AND dod_id = _dod_id);
 
 	IF NOT FOUND THEN
 		pers_id := gen_random_UUID();
+		
+		IF is_from_public THEN
+			_full_name := system_person_name; 
+			_given_name := '';
+			_surname := '';
+			_assigned_unit := ''; 
+			_reporting_unit := '';
+			_dod_id := 0;
+			_duty_title := '';
+			_duty_type := '';
+			_rank := '';
+			_phone_commercial := '';
+			_dsn_phone := '';
+			_email := '';
+			_combatant_command := '';
+			_other_command := '';
+		END IF;
+		
 		INSERT INTO chmr_person (id, 
 								 full_name, 
 								 given_name, 
@@ -733,9 +749,10 @@ BEGIN
 								 rank, 
 								 phone_commercial, 
 								 dsn_phone, 
-								 email_address, 
+								 email, 
 								 combatant_command, 
 								 other_command,
+								 is_system_user,
 								 group_id,
 								 created_datetime, 
 								 created_person_id, 
@@ -753,9 +770,10 @@ BEGIN
 				_rank, 
 				_phone_commercial, 
 				_dsn_phone, 
-				_email_address, 
+				_email, 
 				_combatant_command, 
 				_other_command, 
+				is_from_public,
 				null,
 				now(),
 				pers_id,
@@ -774,10 +792,11 @@ BEGIN
 			rank = _rank, 
 			phone_commercial = _phone_commercial, 
 			dsn_phone = _dsn_phone, 
-			email_address = _email_address, 
+			email = _email, 
 			combatant_command = _combatant_command, 
 			other_command = _other_command, 
-			last_accessed_datetime = now()
+			last_accessed_datetime = now(),
+			last_accessed_person_id = pers_id
 		WHERE id = pers_id;
 	END IF;
 	RETURN pers_id;
@@ -797,7 +816,7 @@ CREATE OR REPLACE PROCEDURE ingest_ch_intake(_public_report_id		uuid,
 											  _rank					varchar(24),
 											  _phone_commercial		varchar(16),
 											  _dsn_phone			varchar(12),
-											  _email_address		varchar(320),
+											  _email				varchar(320),
 											  _combatant_command	varchar(16),
 											  _other_command		varchar(16),
 											  _start_datetime       timestamp,
@@ -834,7 +853,7 @@ BEGIN
 							   _rank,
 							   _phone_commercial,
 							   _dsn_phone,
-							   _email_address,
+							   _email,
 							   _combatant_command,
 							   _other_command,
 							   _report_origin = 0);
