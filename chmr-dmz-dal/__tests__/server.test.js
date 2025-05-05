@@ -1,21 +1,21 @@
-import { jest } from '@jest/globals';
+import { describe, it, expect, vi } from 'vitest';
 import request from 'supertest';
+import app from '../server/server.js';
 
-// Use unstable_mockModule to mock the Redis client
-await jest.unstable_mockModule('../server/redisClient.js', async () => {
-  console.log('Mock Redis client loaded');
-  return import('../server/__mocks__/redisClient.js'); // Import the mock from __mocks__
+// Mock the Redis client
+vi.mock('../server/redisClient.js', () => {
+  return {
+    default: {
+      on: vi.fn(),
+      connect: vi.fn().mockResolvedValue(true),
+      quit: vi.fn().mockResolvedValue(true),
+      get: vi.fn(),
+      set: vi.fn(),
+      del: vi.fn(),
+      sendCommand: vi.fn().mockResolvedValue('OK'),
+    },
+  };
 });
-
-// Dynamically import the mocked Redis client and the app
-const redisClient = (await import('../server/redisClient.js')).default;
-const app = (await import('../server/server.js')).default;
-
-
-// Ensure the mock Redis client methods are properly mocked
-redisClient.on.mockImplementation(() => {});
-redisClient.connect.mockResolvedValue(true);
-redisClient.quit.mockResolvedValue(true);
 
 describe('Server Regression Tests', () => {
   it('should respond to the root route with 404', async () => {

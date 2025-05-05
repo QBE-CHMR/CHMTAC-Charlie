@@ -1,5 +1,5 @@
 import express from 'express';
-import { redisClient } from '../redisClient.js';
+import redisClient from '../redisClient.js';
 import { STATUS_ENUM } from '../constants/statusEnum.js';
 
 const managementRouter = express.Router();
