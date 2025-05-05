@@ -1,3 +1,4 @@
+console.log('Real Redis client loaded');
 import { createClient } from 'redis';
 
 const redisUrl = process.env.REDIS_HOST || 'redis://localhost:6379';
