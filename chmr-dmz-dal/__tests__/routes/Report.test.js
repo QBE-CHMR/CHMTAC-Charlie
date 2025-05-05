@@ -1,10 +1,11 @@
-jest.mock('../../server/redisClient.js');
-jest.setTimeout(10000);
-
+import { describe, it, expect, vi } from 'vitest';
 import request from 'supertest';
 import app from '../../server/server.js';
 
-describe('Report Router Tests', () => {
+// Mock the Redis client
+vi.mock('../../server/redisClient.js'); // Automatically uses the mock from __mocks__/redisClient.js
+
+describe('Report API Tests', () => {
   it('should return all reports when no status is provided', async () => {
     const response = await request(app).get('/report');
     expect(response.status).toBe(200);

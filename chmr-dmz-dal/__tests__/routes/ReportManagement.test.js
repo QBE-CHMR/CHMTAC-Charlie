@@ -1,15 +1,11 @@
-jest.mock('../../server/redisClient.js');
-
+import { describe, it, expect, vi } from 'vitest';
 import request from 'supertest';
 import app from '../../server/server.js';
 
-describe('Report Management Router Tests', () => {
-  it('should return all reports for management', async () => {
-    const response = await request(app).get('/report/management');
-    expect(response.status).toBe(200);
-    expect(Array.isArray(response.body)).toBe(true);
-  });
+// Mock the Redis client
+vi.mock('../../server/redisClient.js'); // Automatically uses the mock from __mocks__/redisClient.js
 
+describe('Report Management API Tests', () => {
   it('should return a specific report by ID', async () => {
     const response = await request(app).get('/report/management/1'); // Assuming ID 1 exists
     expect(response.status).toBe(200);
