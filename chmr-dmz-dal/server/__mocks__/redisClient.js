@@ -1,12 +1,13 @@
-import { jest } from '@jest/globals';
+import { vi } from 'vitest';
 
 const redisClient = {
-  on: jest.fn(),
-  connect: jest.fn().mockResolvedValue(true),
-  quit: jest.fn().mockResolvedValue(true),
-  get: jest.fn(),
-  set: jest.fn(),
-  del: jest.fn(),
+    on: vi.fn(),
+    connect: vi.fn().mockResolvedValue(true),
+    quit: vi.fn().mockResolvedValue(true),
+    get: vi.fn(),
+    set: vi.fn(),
+    del: vi.fn(),
+    sendCommand: vi.fn().mockResolvedValue('OK'),
 };
 
 export default redisClient;

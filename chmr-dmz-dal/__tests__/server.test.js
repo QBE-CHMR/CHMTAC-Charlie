@@ -3,18 +3,8 @@ import request from 'supertest';
 import app from '../server/server.js';
 
 // Mock the Redis client
-vi.mock('../server/redisClient.js', () => {
-  return {
-    default: {
-      on: vi.fn(),
-      connect: vi.fn().mockResolvedValue(true),
-      quit: vi.fn().mockResolvedValue(true),
-      get: vi.fn(),
-      set: vi.fn(),
-      del: vi.fn(),
-      sendCommand: vi.fn().mockResolvedValue('OK'),
-    },
-  };
+vi.mock('../server/redisClient.js', async () => {
+  return await import('../server/__mocks__/redisClient.js');
 });
 
 describe('Server Regression Tests', () => {
