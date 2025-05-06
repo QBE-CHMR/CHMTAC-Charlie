@@ -935,14 +935,14 @@ BEGIN
 	IF cardinality(files) > 0 THEN
 	    FOREACH fname IN ARRAY files
 	    LOOP
-			call insert_fileinformation(report_id, _full_name, fname, person_id);
+			call insert_fileinformation(obs_id, _full_name, fname, person_id);
 			COMMIT;
 	    END LOOP;
 	END IF;
 
 	--    URL
 	IF COALESCE(TRIM(_information_url), '') != '' THEN
-		call insert_urlinformation(report_id, _full_name::varchar(300), _information_url::varchar(2083), person_id);
+		call insert_urlinformation(obs_id, _full_name::varchar(300), _information_url::varchar(2083), person_id);
 		COMMIT;
 	END IF;
 END;
