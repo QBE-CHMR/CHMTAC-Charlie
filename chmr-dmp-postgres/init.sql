@@ -1,4 +1,4 @@
-/*
+
 
 CREATE DATABASE chmr_dmp
     WITH
@@ -7,10 +7,11 @@ CREATE DATABASE chmr_dmp
     LOCALE_PROVIDER = 'libc'
     CONNECTION LIMIT = -1
     IS_TEMPLATE = False;
-*/
+
+\c chmr_dmp
 
 DROP TABLE IF EXISTS chmr_assessment;
-CREATE TABLE "chmr_assessment"
+CREATE TABLE chmr_assessment
 ( 
 	id                   	UUID DEFAULT gen_random_UUID()
 	,public_assessment_id 	UUID NOT NULL
@@ -36,7 +37,7 @@ CREATE TABLE "chmr_assessment"
 );
 
 DROP TABLE IF EXISTS chmr_associated_information CASCADE;
-CREATE TABLE "chmr_associated_information"
+CREATE TABLE chmr_associated_information
 ( 
 	 id						UUID	NOT NULL
 	,info_ctrl_id 			UUID 	NOT NULL
@@ -49,7 +50,7 @@ CREATE TABLE "chmr_associated_information"
 );
 
 DROP TABLE IF EXISTS chmr_associated_operation;
-CREATE TABLE "chmr_associated_operation"
+CREATE TABLE chmr_associated_operation
 ( 
 	 id						UUID	NOT NULL
 	,report_id				UUID	NOT NULL
@@ -73,7 +74,7 @@ CREATE TABLE chmr_associated_platform
 );
 
 DROP TABLE IF EXISTS chmr_associated_report;
-CREATE TABLE "chmr_associated_report"
+CREATE TABLE chmr_associated_report
 ( 
 	 id						UUID		NOT NULL
 	,info_ctrl_id			UUID		NOT NULL
@@ -86,8 +87,8 @@ CREATE TABLE "chmr_associated_report"
 	,last_accessed_person_id UUID		NOT NULL
 );
 
-DROP TABLE IF EXISTS "chmr_associated_user_group";
-CREATE TABLE "chmr_associated_user_group"
+DROP TABLE IF EXISTS chmr_associated_user_group;
+CREATE TABLE chmr_associated_user_group
 ( 
 	id						UUID	NOT NULL
 	,person_id				UUID	NOT NULL
@@ -99,7 +100,7 @@ CREATE TABLE "chmr_associated_user_group"
 );
 
 DROP TABLE IF EXISTS chmr_associated_user_role;
-CREATE TABLE "chmr_associated_user_role"
+CREATE TABLE chmr_associated_user_role
 ( 
 	 id	UUID	NOT NULL
 	,user_role_id	UUID	NOT NULL
@@ -114,7 +115,7 @@ CREATE TABLE "chmr_associated_user_role"
 );
 
 DROP TABLE IF EXISTS chmr_associated_weapon;
-CREATE TABLE "chmr_associated_weapon"
+CREATE TABLE chmr_associated_weapon
 ( 
 	 id						UUID	NOT NULL
 	,info_ctrl_id			UUID	NOT NULL
@@ -127,7 +128,7 @@ CREATE TABLE "chmr_associated_weapon"
 );
 
 DROP TABLE IF EXISTS chmr_decision;
-CREATE TABLE "chmr_decision"
+CREATE TABLE chmr_decision
 ( 
 	 id						UUID	NOT NULL
 	,review_assess_id		UUID	NOT NULL
@@ -144,7 +145,7 @@ CREATE TABLE "chmr_decision"
 );
 
 DROP TABLE IF EXISTS chmr_info_control;
-CREATE TABLE "chmr_info_control"
+CREATE TABLE chmr_info_control
 ( 
 	 id						UUID		NOT NULL
 	,owner_id				UUID		NOT NULL
@@ -159,7 +160,7 @@ CREATE TABLE "chmr_info_control"
 );
 
 DROP TABLE IF EXISTS chmr_information_source;
-CREATE TABLE "chmr_information_source"
+CREATE TABLE chmr_information_source
 ( 
 	 id						UUID		NOT NULL
 	,title					VARCHAR(255)	NOT NULL
@@ -176,7 +177,7 @@ CREATE TABLE "chmr_information_source"
 );
 
 DROP TABLE IF EXISTS chmr_initial_review;
-CREATE TABLE "chmr_initial_review"
+CREATE TABLE chmr_initial_review
 ( 
 	id                   	UUID DEFAULT gen_random_UUID()
 	,public_review_id		UUID NOT NULL
@@ -197,7 +198,7 @@ CREATE TABLE "chmr_initial_review"
 );
 
 DROP TABLE IF EXISTS chmr_investigation;
-CREATE TABLE "chmr_investigation"
+CREATE TABLE chmr_investigation
 ( 
 	 id						UUID	NOT NULL
 	,public_investigation_id	UUID	NOT NULL
@@ -222,7 +223,7 @@ CREATE TABLE "chmr_investigation"
 );
 
 DROP TABLE IF EXISTS chmr_observation;
-CREATE TABLE "chmr_observation"
+CREATE TABLE chmr_observation
 ( 
 	 id	UUID	NOT NULL
 	,start_datetime			TIMESTAMP	NOT NULL
@@ -243,8 +244,8 @@ CREATE TABLE "chmr_observation"
 	,last_accessed_person_id UUID	NOT NULL
 );
 
-DROP TABLE IF EXISTS "chmr_person";
-CREATE TABLE "chmr_person"
+DROP TABLE IF EXISTS chmr_person;
+CREATE TABLE chmr_person
 ( 
 	 id						UUID   NOT NULL	
 	,full_name				VARCHAR(128)	NULL
@@ -270,7 +271,7 @@ CREATE TABLE "chmr_person"
 );
 
 DROP TABLE IF EXISTS chmr_platform;
-CREATE TABLE "chmr_platform"
+CREATE TABLE chmr_platform
 ( 
 	 id						UUID	NOT NULL
 	,ain					VARCHAR(255)	NOT NULL
@@ -310,7 +311,7 @@ CREATE TABLE chmr_report
 );
 
 DROP TABLE IF EXISTS chmr_us_military_operation;
-CREATE TABLE "chmr_us_military_operation"
+CREATE TABLE chmr_us_military_operation
 ( 
 	 id						UUID	NOT NULL
 	,ext_identification		TEXT	NULL
@@ -340,8 +341,8 @@ CREATE TABLE "chmr_us_military_operation"
 	,last_accessed_person_id UUID	NOT NULL	
 );
 
-DROP TABLE IF EXISTS "chmr_user_group";
-CREATE TABLE "chmr_user_group"
+DROP TABLE IF EXISTS chmr_user_group;
+CREATE TABLE chmr_user_group
 ( 
 	 id                   UUID  NOT NULL
 	,name                 VARCHAR(32)  NOT NULL
@@ -352,7 +353,7 @@ CREATE TABLE "chmr_user_group"
 );
 
 DROP TABLE IF EXISTS chmr_user_role;
-CREATE TABLE "chmr_user_role"
+CREATE TABLE chmr_user_role
 ( 
 	 id						UUID	NOT NULL
 	,name					VARCHAR(32)	NOT NULL
@@ -363,7 +364,7 @@ CREATE TABLE "chmr_user_role"
 );
 
 DROP TABLE IF EXISTS chmr_weapon;
-CREATE TABLE "chmr_weapon"
+CREATE TABLE chmr_weapon
 ( 
 	 id						UUID	NOT NULL
 	,ain					VARCHAR(255)	NOT NULL
