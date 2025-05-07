@@ -1,7 +1,7 @@
 networks:
-  dmznet:
+  chmrdmznet:
     driver: bridge
-  dmpnet:
+  chmrdmpnet:
     driver: bridge
 
 services:
@@ -13,7 +13,7 @@ services:
     environment:
       REDIS_HOST: redis://chmr-dmz-redis:6379
     networks:
-      - dmznet
+      - chmrdmznet
     depends_on:
       - chmr-dmz-redis # Ensure Redis starts before DAL
     volumes:
@@ -29,7 +29,7 @@ services:
     ports:
       - "${PORT_INTAKE}:80" # Expose container's port to the host
     networks:
-      - dmznet
+      - chmrdmznet
     depends_on:
       - chmr-dmz-dal # Ensure DAL starts before intake-web
 
@@ -41,16 +41,16 @@ services:
     environment:
       REACT_APP_DAL_HOST: http://chmr-dmz-dal:5000 # DAL is accessible via dmznet
     ports:
-      - "${PORT_MAINT}:80" # Expose maint to the host
+      - "${PORT_DMZ_MAINT}:80" # Expose maint to the host
     networks:
-      - dmznet
+      - chmrdmznet
     depends_on:
       - chmr-dmz-dal # Ensure DAL starts before maint
 
   chmr-dmz-redis:
     image: redis:7
     networks:
-      - dmznet
+      - chmrdmznet
   
   chmr-dmp-postgres:
     build:
@@ -59,7 +59,21 @@ services:
     volumes:
       - ./postgres-data:/var/lib/postgresql/data
     networks:
-      - dmpnet
+      - chmrdmpnet
+
+  chmr-dmp-dal:
+    build:
+      context: ./chmr-dmp-dal
+    env_file:
+      - .env
+    environment:
+      POSTGRES_HOST: postgres://chmr-dmp-postgres:5342
+    networks:
+      - chmrdmpnet
+    depends_on:
+      - chmr-dmp-postgres
+    volumes:
+      - filedata:/usr/server/app/files
 
 volumes:
   filedata:

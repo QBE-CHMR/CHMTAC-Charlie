@@ -17,7 +17,7 @@ app.use("/files", express.static(path.resolve("files")));
 app.use("/report", ReportRouter);
 app.use('/report/management', managementRouter);
 
-const PORT = process.env.Port || 5000;
+const PORT = process.env.PORT_DMZ_DAL || 5000;
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
