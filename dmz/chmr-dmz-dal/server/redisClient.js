@@ -1,6 +1,6 @@
 import { createClient } from 'redis';
 
-const redisUrl = process.env.REDIS_HOST;
+const redisUrl = process.env.HOST_REDIS;
 
 const redisClient = createClient({
   url: redisUrl,

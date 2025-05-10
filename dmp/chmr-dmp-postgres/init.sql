@@ -262,7 +262,6 @@ CREATE TABLE chmr_person
 	,email					VARCHAR(320)	NULL
 	,combatant_command		VARCHAR(16)	NULL
 	,other_command			VARCHAR(16)	NULL
-	,group_id				UUID  NULL
 	,is_system_user			BOOLEAN	NOT NULL
 	,created_datetime		TIMESTAMP  NOT NULL
 	,created_person_id		UUID NOT NULL

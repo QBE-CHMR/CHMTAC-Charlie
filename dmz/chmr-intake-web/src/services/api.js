@@ -5,7 +5,7 @@ const API_BASE_URL = '/report';
 
 export const submitReport = async (data) => {
   try {
-    const contactType = process.env.REACT_APP_CONTACT_TYPE || 'DOD';
+    const contactType = process.env.CHIR_CONTACT_TYPE || 'DOD';
     const endpoint = `${API_BASE_URL}?type=${encodeURIComponent(contactType)}`;
 
     // Debugging: Log the FormData object
