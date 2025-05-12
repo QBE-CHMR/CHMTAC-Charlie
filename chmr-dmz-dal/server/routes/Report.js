@@ -93,7 +93,7 @@ async function submitReport(req, res) {
       status: STATUS_ENUM.SUBMITTED,
       filereferences,
       submittedAt: new Date().toISOString(),
-      confidence_level: parseInt(process.env.CHIR_CONFIDENCE_LEVEL, 10) || 1, // Default to civilian if not set
+      confidence_level: parseInt(process.env.REACT_APP_CONFIDENCE_LEVEL, 10) || 1, // Default to civilian if not set
     };
     
     // Log the data before storing it in Redis

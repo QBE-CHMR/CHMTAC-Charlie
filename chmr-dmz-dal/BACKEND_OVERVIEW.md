@@ -97,7 +97,7 @@ The `dmz-dal` (Data Access Layer) is a Node.js/Express service that acts as the 
   - Temporary storage for reports and metadata.
   - Used for rate limiting.
 - **Configuration**:
-  - Redis URL is set via the `HOST_REDIS` environment variable.
+  - Redis URL is set via the `REDIS_HOST` environment variable.
 - **Key Structure**:
   - Civilian reports: `Civilian Report:<UUID>`
   - DoD reports: `DoD Report:<UUID>`
@@ -120,7 +120,7 @@ The `dmz-dal` (Data Access Layer) is a Node.js/Express service that acts as the 
 ## Environment Variables
 
 ### Backend Variables:
-- `HOST_REDIS`: Redis connection string (e.g., `redis://localhost:6379`).
+- `REDIS_HOST`: Redis connection string (e.g., `redis://localhost:6379`).
 - `PORT`: Port for the Express server (default: `5000`).
 
 ### Frontend Variables:
@@ -143,7 +143,7 @@ The `dmz-dal` (Data Access Layer) is a Node.js/Express service that acts as the 
 ## Points to Note
 
 1. **Redis Connection Errors**:
-   - Ensure the `HOST_REDIS` variable is correctly set.
+   - Ensure the `REDIS_HOST` variable is correctly set.
    - Verify that the Redis container is running and accessible.
 
 2. **File Upload**:
