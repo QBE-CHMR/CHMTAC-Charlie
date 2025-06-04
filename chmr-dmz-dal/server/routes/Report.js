@@ -10,20 +10,38 @@ import multer from 'multer';
 import path from 'path';
 import rateLimiter from '../middleware/rateLimiter.js';
 import { fileURLToPath } from 'url';
+import fs from 'fs';
 
 const ReportRouter = express.Router();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+function setReportUID(req, _res, next){
+  if(!req.reportUID) req.reportUID = uuidv4();
+  next(); 
+}
+
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    const filesDir = path.join(__dirname, '..', '..', 'files');
-    cb(null, filesDir);
+  destination: (req, _file, cb) => {
+    const now = new Date();
+    const dateFolder =
+      String(now.getDate()).padStart(2, '0') + '-' +
+      now.toLocaleString('en-US', { month: 'short' }) + '-' +
+      now.getFullYear();
+
+    const destDir = path.join(
+      __dirname, '..', '..', 'files',
+      dateFolder,
+      req.reportUID               
+    );
+
+    fs.mkdirSync(destDir, { recursive: true });
+    cb(null, destDir);
   },
-  filename: (req, file, cb) => {
-    const uniqueName = Date.now() + '-' + file.originalname;
-    cb(null, uniqueName);
+
+  filename: (_req, file, cb) => {
+    cb(null, file.originalname);    
   },
 });
 
@@ -72,7 +90,7 @@ function pickValidator(req, res, next) {
 async function submitReport(req, res) {
   try {
     const type = req.query.type.toUpperCase();
-    const reportID = uuidv4();
+    const reportID = req.reportUID;
 
     // Handle file references
     let filereferences = [];
@@ -141,6 +159,7 @@ ReportRouter.post(
     captureInfo, // Log request details (moved before file upload)
     useragentfilter, // Filter based on user-agent
     // Change 'files' to 'document_files' to match the frontend field name
+    setReportUID,
     upload.array('document_files', 5), // Handle file uploads with the correct field name
     logRequestData, // Log request data after files are processed
     //pickValidator, // Validate required fields
