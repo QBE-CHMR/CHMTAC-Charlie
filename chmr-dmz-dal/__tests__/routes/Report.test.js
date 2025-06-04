@@ -41,7 +41,7 @@ describe('Report Submission API Tests', () => {
     const response = await request(app)
       .post('/report?type=DOD')
       .send(invalidReport);
-
+  
     expect(response.status).toBe(400); // Assuming validation errors return 400
     expect(response.body).toEqual({
       error: 'Validation failed: title is required',
@@ -59,10 +59,10 @@ describe('Report Submission API Tests', () => {
       .post('/report?type=DOD')
       .send(invalidReport);
 
-    expect(response.status).toBe(400); // Assuming validation errors return 400
+    expect(response.status).toBe(400); // Validation errors return 400
     expect(response.body).toEqual({
       error: 'Validation failed: status is invalid',
-    }); // Adjust based on your API's error response
+    });
   });
 
   it('should fail to submit a report with no data', async () => {
@@ -70,7 +70,7 @@ describe('Report Submission API Tests', () => {
       .post('/report?type=DOD')
       .send({}); // Empty payload
 
-    expect(response.status).toBe(400); // Assuming validation errors return 400
+    expect(response.status).toBe(400); // Validation errors return 400
     expect(response.body).toEqual({
       error: 'Validation failed: required fields are missing',
     }); // Adjust based on your API's error response
