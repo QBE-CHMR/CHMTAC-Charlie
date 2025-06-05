@@ -10,9 +10,15 @@ RUN npm run build
 
 # Use Nginx to serve the static files
 FROM nginx:alpine
+
+# Copy the built static files from the Node.js build stage
 COPY --from=build /app/build /usr/share/nginx/html
-COPY nginx.conf /etc/nginx/conf.d/default.conf
 
+# Copy custom Nginx configuration for rate limiting
+COPY nginx.conf /etc/nginx/nginx.conf
 
+# Expose port 80
 EXPOSE 80
+
+# Start Nginx
 CMD ["nginx", "-g", "daemon off;"]
