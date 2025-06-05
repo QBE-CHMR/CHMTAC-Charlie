@@ -5,6 +5,7 @@ networks:
     driver: bridge
 
 services:
+  # A Node.js/Express service for handling API requests and interacting with the database.
   chmr-dmz-dal:
     build:
       context: ./chmr-dmz-dal
@@ -19,6 +20,7 @@ services:
     volumes:
       - filedata:/usr/server/app/files
 
+  # Web page to report civilian harm
   intake-web:
     build:
       context: ./chmr-intake-web
@@ -33,6 +35,7 @@ services:
     depends_on:
       - chmr-dmz-dal # Ensure DAL starts before intake-web
 
+  # A React-based application for managing reports.
   maint:
     build:
       context: ./chmr-dmz-maint
@@ -47,11 +50,13 @@ services:
     depends_on:
       - chmr-dmz-dal # Ensure DAL starts before maint
 
+  # A redis container used for caching and session management.
   chmr-dmz-redis:
     image: redis:7
     networks:
       - chmrdmznet
   
+  # A container to start the postgres database.
   chmr-dmp-postgres:
     build:
       context: ./chmr-dmp-postgres
@@ -61,6 +66,7 @@ services:
     networks:
       - chmrdmpnet
 
+  # A Node.js/Express service for handling API requests and interacting with the database.
   chmr-dmp-dal:
     build:
       context: ./chmr-dmp-dal

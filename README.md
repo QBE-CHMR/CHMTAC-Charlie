@@ -10,7 +10,6 @@ CHMTAC is a containerized, multi-service application designed to intake reports 
 - [Services](#services)
 - [Setup and Installation](#setup-and-installation)
 - [Usage](#usage)
-- [Environment Variables](#environment-variables)
 - [Contributing](#contributing)
 - [License](#license)
 
@@ -90,20 +89,6 @@ The architecture is partitioned into individual containers:
 1. Navigate to the report manager (`chmr-dmz-maint`) at [http://localhost:${DMZ_MAINT_PORT}](http://localhost:${DMZ_MAINT_PORT}).
 2. Use the filters and sorting options to manage reports.
 
----
 
-## **Environment Variables**
-The following environment variables are used in the project:
-
-### **Frontend (`chmr-intake-web`)**
-- `REACT_APP_REACT_APP_CONTACT_TYPE`: Choose which form contact info to include (DOD or CIVILIAN).
-- `REACT_APP_API_BASE_URL`: Base URL for the backend API.
-
-### **Report Manager (`chmr-dmz-maint`)**
-- `REACT_APP_API_BASE_URL`: Base URL for the backend API.
-
-### **Backend (`chmr-dmz-dal`)**
-- `REDIS_URL`: URL for the Redis instance (e.g., `redis://chmr-dmz-redis:6379`).
-- `NODE_ENV`: Set to `production` or `development`.
 
 
