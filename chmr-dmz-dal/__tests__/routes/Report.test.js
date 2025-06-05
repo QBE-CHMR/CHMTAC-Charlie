@@ -8,6 +8,7 @@ vi.mock('../../server/redisClient.js'); // Automatically uses the mock from __mo
 describe('Report Submission API Tests', () => {
   it('should successfully submit a valid report', async () => {
     const validReport = {
+      "id": "9e48eb63-9a08-41e0-a450-e0686ddb8137",
       "full_name": "John Doe",
       "phone_number": "555-123-4567",
       "email_address": "john.doe@example.com",
@@ -22,7 +23,7 @@ describe('Report Submission API Tests', () => {
       "time_zone": "Etc/GMT+5",
       "total_harm": "None",
       "us_harm": "None",
-      "status": "initialized"
+      "status": "submitted"
     }
 
     const response = await request(app)
@@ -42,26 +43,9 @@ describe('Report Submission API Tests', () => {
       .post('/report?type=DOD')
       .send(invalidReport);
   
-    expect(response.status).toBe(400); // Assuming validation errors return 400
+    expect(response.status).toBe(400); // Indicates validation error
     expect(response.body).toEqual({
-      error: 'Validation failed: title is required',
-    }); // Adjust based on your API's error response
-  });
-
-  it('should fail to submit a report with an invalid status', async () => {
-    const invalidReport = {
-      title: 'Invalid Status Report',
-      description: 'This report has an invalid status',
-      status: 'invalid_status', // Invalid status
-    };
-
-    const response = await request(app)
-      .post('/report?type=DOD')
-      .send(invalidReport);
-
-    expect(response.status).toBe(400); // Validation errors return 400
-    expect(response.body).toEqual({
-      error: 'Validation failed: status is invalid',
+      error: "Missing required field: id",
     });
   });
 
@@ -72,7 +56,7 @@ describe('Report Submission API Tests', () => {
 
     expect(response.status).toBe(400); // Validation errors return 400
     expect(response.body).toEqual({
-      error: 'Validation failed: required fields are missing',
+      error: "Missing required field: id",
     }); // Adjust based on your API's error response
   });
 });

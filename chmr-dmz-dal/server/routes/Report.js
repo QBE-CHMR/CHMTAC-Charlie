@@ -138,11 +138,10 @@ ReportRouter.post(
     '/',
     captureInfo, // Log request details (moved before file upload)
     useragentfilter, // Filter based on user-agent
-    // Change 'files' to 'document_files' to match the frontend field name
     upload.array('document_files', 5), // Handle file uploads with the correct field name
     logRequestData, // Log request data after files are processed
-    //pickValidator, // Validate required fields
-    //validateReport, // Validate report structure
+    pickValidator, // Validate required fields
+    validateReport, // Validate report structure
     submitReport // Handle the core business logic
   );
 
