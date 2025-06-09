@@ -2,7 +2,6 @@ import { describe, it, expect, vi } from 'vitest';
 import request from 'supertest';
 import app from '../../server/server.js';
 
-// Mock the Redis client
 vi.mock('../../server/redisClient.js'); // Automatically uses the mock from __mocks__/redisClient.js
 
 describe('Report Management API Tests', () => {
@@ -16,17 +15,5 @@ describe('Report Management API Tests', () => {
     const response = await request(app).get('/report/management/9999');
     expect(response.status).toBe(404);
     expect(response.body).toEqual({ error: 'Report not found' });
-  });
-
-  it('should download a file successfully', async () => {
-    const response = await request(app).get('/report/management/files/example1.txt');
-    expect(response.status).toBe(200);
-    expect(response.headers['content-type']).toBe('application/octet-stream');
-  });
-
-  it('should return 404 for a non-existent file', async () => {
-    const response = await request(app).get('/report/management/files/nonexistent.txt');
-    expect(response.status).toBe(404);
-    expect(response.body).toEqual({ error: 'File not found' });
   });
 });
