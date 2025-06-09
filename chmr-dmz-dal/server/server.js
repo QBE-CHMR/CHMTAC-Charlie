@@ -4,7 +4,7 @@ import cookieParser from 'cookie-parser';
 import ReportRouter from './routes/Report.js';
 import managementRouter from './routes/ReportManagement.js';
 import './redisClient.js';
-import path from 'path';
+import path from "path";
 
 const app = express();
 

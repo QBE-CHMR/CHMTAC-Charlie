@@ -20,5 +20,5 @@
     VOLUME ["/usr/server/app/files"]
     EXPOSE 5000
     
-    CMD ["node", "server/server.js"]
+    CMD ["node", "server.js"]
     
