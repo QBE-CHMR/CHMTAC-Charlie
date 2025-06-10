@@ -45,7 +45,7 @@ describe('Report Submission API Tests', () => {
   
     expect(response.status).toBe(400); // Indicates validation error
     expect(response.body).toEqual({
-      error: "Missing required field: id",
+      error: "Missing required field: publicUUID",
     });
   });
 
@@ -56,7 +56,7 @@ describe('Report Submission API Tests', () => {
 
     expect(response.status).toBe(400); // Validation errors return 400
     expect(response.body).toEqual({
-      error: "Missing required field: id",
+      error: "Missing required field: publicUUID",
     }); // Adjust based on your API's error response
   });
 });
