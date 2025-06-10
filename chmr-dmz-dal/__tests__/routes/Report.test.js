@@ -8,7 +8,7 @@ vi.mock('../../server/redisClient.js'); // Automatically uses the mock from __mo
 describe('Report Submission API Tests', () => {
   it('should successfully submit a valid report', async () => {
     const validReport = {
-      "id": "9e48eb63-9a08-41e0-a450-e0686ddb8137",
+      "publicUUID": "9e48eb63-9a08-41e0-a450-e0686ddb8137",
       "full_name": "John Doe",
       "phone_number": "555-123-4567",
       "email_address": "john.doe@example.com",

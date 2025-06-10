@@ -4,7 +4,7 @@
 
 export default (req, res, next) => {
     const requiredFields = [
-      'id',
+      'publicUUID',
       'full_name',
       'phone_number',
       'email_address',
@@ -13,7 +13,6 @@ export default (req, res, next) => {
       'time_zone',
       'total_harm',
       'us_harm',
-      'status'
     ];
   
     for (const field of requiredFields) {
