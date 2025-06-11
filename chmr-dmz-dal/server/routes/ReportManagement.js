@@ -76,7 +76,7 @@ managementRouter.get('/', async (req, res) => {
 managementRouter.get('/:id', async (req, res) => {
     try {
       const key = await keyFor(req.params.id);
-      if(!key) return res.status(404).json({error: "Report not ound"});
+      if(!key) return res.status(404).json({error: "Report not found"});
       const report = await redisClient.get(key);
       if (!report) {
         return res.status(404).json({ error: 'Report not found' });
