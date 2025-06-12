@@ -1,6 +1,6 @@
 import express from 'express';
 import { v4 as uuidv4 } from 'uuid';
-import { redisClient } from '../redisClient.js';
+import redisClient from '../redisClient.js';
 import CivValidateRequiredFields from '../middleware/CivValidateRequiredFields.js';
 import DodValidateRequiredFields from '../middleware/DodValidateRequiredFields.js';
 import { STATUS_ENUM } from '../constants/statusEnum.js';
@@ -8,7 +8,6 @@ import validateReport from '../middleware/validateReport.js';
 import useragentfilter from '../useragentfilter.js'
 import multer from 'multer';
 import path from 'path';
-import rateLimiter from '../middleware/rateLimiter.js';
 import { fileURLToPath } from 'url';
 import fs from 'fs';
 
@@ -155,15 +154,13 @@ function logRequestData(req, res, next) {
 
 ReportRouter.post(
     '/',
-    rateLimiter, // Apply rate limiting
     captureInfo, // Log request details (moved before file upload)
     useragentfilter, // Filter based on user-agent
-    // Change 'files' to 'document_files' to match the frontend field name
-    setReportUID,
+    setReportUID, // Set a unique nonpublic report ID
     upload.array('document_files', 5), // Handle file uploads with the correct field name
     logRequestData, // Log request data after files are processed
-    //pickValidator, // Validate required fields
-    //validateReport, // Validate report structure
+    pickValidator, // Validate required fields
+    validateReport, // Validate report structure
     submitReport // Handle the core business logic
   );
 
