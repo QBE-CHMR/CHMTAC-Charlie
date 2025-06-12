@@ -1,7 +1,7 @@
-const express = require('express');
-const app = express();
-const { Pool } = require('pg');
+import express from 'express';
+import { Pool } from 'pg';
 
+const app = express();
 const pgHost = process.env.POSTGRES_HOST;
 const port = process.env.PORT_DMP_DAL;
 
