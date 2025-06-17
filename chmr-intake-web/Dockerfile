@@ -1,9 +1,10 @@
 # Build Stage
-FROM node:18-alpine AS build
+FROM node:20-alpine AS build
 
 WORKDIR /app
 COPY package*.json ./
-RUN npm install && npm cache clean --force
+RUN npm ci --omit=dev --loglevel=error \
+ && npm cache clean --force
 
 COPY . .
 RUN npm run build
