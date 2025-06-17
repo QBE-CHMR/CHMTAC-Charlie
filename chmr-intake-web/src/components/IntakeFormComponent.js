@@ -47,10 +47,16 @@ const IntakeFormComponent = ({ onSubmit }) => {
 
   const getLocation = () => {
     if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition((position) => {
-        const { latitude, longitude } = position.coords;
-        setLocation(`Lat: ${latitude}, Long: ${longitude}`); // Update state
-      });
+      setLocation("Loading coordinates..."); // Set loading text
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          setLocation(`Lat: ${latitude}, Long: ${longitude}`); // Update with actual coordinates
+        },
+        () => {
+          setLocation("Unable to retrieve location."); // Handle errors
+        }
+      );
     } else {
       setError("Geolocation is not supported by this browser.");
     }
