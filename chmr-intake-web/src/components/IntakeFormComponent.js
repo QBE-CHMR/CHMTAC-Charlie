@@ -269,8 +269,8 @@ const IntakeFormComponent = ({ onSubmit }) => {
             variant="contained"
             sx={{
               backgroundColor: "#3f51b5",
-              minWidth: 140, // Increase width slightly
-              mt: 2 // Add more padding for a larger buttonS
+              minWidth: 140,
+              mt: 2
             }}
           >
             Submit Form
